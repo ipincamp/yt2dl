@@ -1,0 +1,38 @@
+{
+  "name": "pinytdl",
+  "version": "1.0.0",
+  "description": "YouTube Video Downloader using JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ariflitejek/pinytdl.git"
+  },
+  "keywords": [
+    "javascript",
+    "ytdl",
+    "nodejs"
+  ],
+  "author": "ariflitejek",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ariflitejek/pinytdl/issues"
+  },
+  "homepage": "https://github.com/ariflitejek/pinytdl#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-validation": "^3.0.8",
+    "ffmpeg-static": "^4.4.0",
+    "lodash": "^4.17.21",
+    "sanitize-filename": "^1.6.3",
+    "ytdl-core": "^4.9.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.4.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "nodemon": "^2.0.15"
+  }
+}
