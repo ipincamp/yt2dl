@@ -2,8 +2,9 @@
   "name": "pinytdl",
   "version": "1.0.0",
   "description": "YouTube Video Downloader using JavaScript",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,9 +25,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-validation": "^3.0.8",
-    "ffmpeg-static": "^4.4.0",
     "lodash": "^4.17.21",
-    "sanitize-filename": "^1.6.3",
     "ytdl-core": "^4.9.1"
   },
   "devDependencies": {

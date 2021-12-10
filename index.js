@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable array-callback-return */
+/* eslint-disable radix */
 const express = require('express');
 const { chain, last, forEach } = require('lodash');
 const ytdl = require('ytdl-core');
@@ -63,7 +66,7 @@ app.get(
         const streams = {};
 
         if (format === 'video') {
-          const resolution = parseInt(req.query.resolution, 10);
+          const resolution = parseInt(req.query.resolution);
 
           const resolutions = getResolutions(formats);
 
@@ -72,9 +75,7 @@ app.get(
           }
 
           const videoFormat = chain(formats)
-            // eslint-disable-next-line array-callback-return
             .filter(({ height, videoCodec }) => {
-              // eslint-disable-next-line no-unused-expressions
               height === resolution && videoCodec?.startsWith('avc1');
             })
             .orderBy('fps', 'desc')
