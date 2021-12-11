@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,35 +8,37 @@
     <link rel="stylesheet" href="https://unpkg.com/destyle.css@2.0.2/destyle.css">
     <link rel="stylesheet" href="./styles/self.css">
     <script src="./scripts/better.js" defer></script>
-</head>
-<body>
-    <div>
+  </head>
+  <body>
+    <div class="container">
+      <section class="first">
         <input class="video-url" value="">
         <button class="start-btn">Start</button>
-    </div>
-    <div>
+      </section>
+      <div>
         <img src="" alt="" class="video-tmb">
         <div class="video-ttl"></div>
-    </div>
-    <div>
+      </div>
+      <div>
         <h2>Formats</h2>
         <!-- Soon if backend ready :)
-            <label>
-                <input type="radio" name="format" value="video" checked>
-                Video
-            </label>
+        <label>
+          <input type="radio" name="format" value="video" checked>
+          Video
+        </label>
         -->
         <label>
-            <input type="radio" name="format" value="audio" checked>
-            Audio
+          <input type="radio" name="format" value="audio" checked>
+          Audio
         </label>
-    </div>
-    <!--
-    <div>
+      </div>
+      <!--
+      <div>
         <h2>Resolutions</h2>
         <div class="resolutions"></div>
+      </div>
+      -->
+      <button class="down-btn">Convert & Download</button>
     </div>
-    -->
-    <button class="down-btn">Convert & Download</button>
-</body>
+  </body>
 </html>
