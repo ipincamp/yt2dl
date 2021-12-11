@@ -8,6 +8,8 @@ const sanitize = require('sanitize-filename');
 
 const app = express();
 
+app.use(express.static('public'));
+
 const getResolutions = formats => chain(formats)
   .filter('height')
   .map('height')
