@@ -173,10 +173,17 @@ app.get(
       .catch(err => next(err));
   },
 );
-
-const server = app.listen(
-  0,
+// With auto port
+// const server = app.listen(
+//   0,
+//   () => {
+//     console.log(`Server listening on port: ${server.address().port}`);
+//   },
+// );
+const port = 5000;
+app.listen(
+  port,
   () => {
-    console.log(`Server listening on port: ${server.address().port}`);
+    console.log(`Server listening on port: ${port}`);
   },
 );
