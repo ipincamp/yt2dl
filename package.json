@@ -2,10 +2,13 @@
   "name": "pinytdl",
   "version": "1.0.0",
   "description": "YouTube Video Downloader using JavaScript",
+  "author": "ariflitejek",
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/ariflitejek/pinytdl#readme",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "npm i",
+    "start": "node main.js"
   },
   "engines": {
     "node": ">=16"
@@ -19,12 +22,9 @@
     "ytdl",
     "nodejs"
   ],
-  "author": "ariflitejek",
-  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/ariflitejek/pinytdl/issues"
   },
-  "homepage": "https://github.com/ariflitejek/pinytdl#readme",
   "dependencies": {
     "child_process": "^1.0.2",
     "express": "^4.17.1",
