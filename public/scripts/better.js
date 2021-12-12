@@ -1,4 +1,6 @@
 const startBtn = document.querySelector('.start-btn');
+const sectionSecond = document.querySelector('section.second');
+const sectionThird = document.querySelector('section.third');
 const videoURL = document.querySelector('.video-url');
 const videoTmbImg = document.querySelector('.video-tmb');
 const videoTtl = document.querySelector('.video-ttl');
@@ -60,6 +62,10 @@ startBtn.addEventListener(
 
     videoTtl.textContent = title;
     videoTmbImg.src = thumbnailURL;
+
+    // DOM CSS
+    [sectionSecond, sectionThird].forEach(e => e.style.display = 'block');
+    downBtn.style.display = 'inline-block';
 
     // RshowResolutions(resolutions);
   },
