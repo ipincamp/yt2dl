@@ -1,3 +1,9 @@
+/* eslint-disable arrow-parens */
+/* eslint-disable no-shadow */
+
+/**
+ * Import all required modules
+ */
 const express = require('express');
 const ytdl = require('ytdl-core');
 const { chain, last, forEach } = require('lodash');
@@ -17,6 +23,9 @@ const getResolutions = formats => chain(formats)
   .orderBy(null, 'desc')
   .value();
 
+/**
+ * Get video information
+ */
 app.get(
   '/api/video',
   validate({
@@ -45,6 +54,9 @@ app.get(
   },
 );
 
+/**
+ * Download event with get method
+ */
 app.get(
   '/download',
   validate({
@@ -65,19 +77,21 @@ app.get(
 
     ytdl.getInfo(id)
       .then(({ videoDetails }) => {
-        // eslint-disable-next-line no-unused-vars
         const { title } = videoDetails;
 
         const streams = {};
 
+        // Select format type
         if (format === 'video') {
-          // Something wrong, i will fix later
+          streams.video = ytdl(id, { quality: 'highest' });
+          streams.audio = ytdl(id, { quality: 'highestaudio' });
         }
 
         if (format === 'audio') {
           streams.audio = ytdl(id, { quality: 'highestaudio' });
         }
 
+        // Define format extension
         const exts = {
           video: 'mp4',
           audio: 'mp3',
@@ -88,6 +102,7 @@ app.get(
           audio: 'audio/mpeg',
         };
 
+        // Initialize filename
         const ext = exts[format];
         const contentType = contentTypes[format];
         const filename = `${encodeURI(sanitize(title))}.${ext}`;
@@ -102,6 +117,7 @@ app.get(
           audio: 4,
         };
 
+        // Stream codec
         const ffmpegInputOptions = {
           video: [
             '-i', `pipe:${pipes.video}`,
@@ -140,11 +156,11 @@ app.get(
           },
         );
 
-        // eslint-disable-next-line arrow-parens
-        const handleFFmpegStreamError = (err) =>
-          // eslint-disable-next-line implicit-arrow-linebreak
+        // Litle change for debug
+        const handleFFmpegStreamError = (err) => {
           console.error(err);
-        // eslint-disable-next-line no-shadow
+        };
+
         forEach(streams, (stream, format) => {
           const dest = ffmpegProcess.stdio[pipes[format]];
           stream.pipe(dest).on('error', handleFFmpegStreamError);
@@ -152,16 +168,16 @@ app.get(
 
         ffmpegProcess.stdio[pipes.out].pipe(res);
 
+        // Make sure no error found
         let ffmpegLogs = '';
         ffmpegProcess.stdio[pipes.err].on(
           'data',
-          // eslint-disable-next-line arrow-parens
           (chunk) => ffmpegLogs += chunk.toString(),
         );
 
+        // End process
         ffmpegProcess.on(
           'exit',
-          // eslint-disable-next-line arrow-parens
           (exitCode) => {
             if (exitCode === 1) {
               console.error(ffmpegLogs);
@@ -173,13 +189,8 @@ app.get(
       .catch(err => next(err));
   },
 );
-// With auto port
-// const server = app.listen(
-//   0,
-//   () => {
-//     console.log(`Server listening on port: ${server.address().port}`);
-//   },
-// );
+
+// Start event
 const port = 5000;
 app.listen(
   port,
