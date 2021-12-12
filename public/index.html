@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PinYT Downloader</title>
+    <title>YouTube Downloader</title>
     <link rel="stylesheet" href="https://unpkg.com/destyle.css@2.0.2/destyle.css">
-    <link rel="stylesheet" href="./styles/self.css">
-    <script src="./scripts/better.js" defer></script>
+    <link rel="stylesheet" href="./styles/style.css">
+    <script src="./scripts/script.js" defer></script>
   </head>
   <body>
     <div class="container">
       <section class="first">
         <input type="url" class="video-url" value="" placeholder="Paste Youtube link here">
-        <button class="start-btn">Start</button>
+        <button class="start-btn">Search</button>
       </section>
       <section class="second">
         <img src="" alt="" class="video-tmb">
@@ -21,23 +21,19 @@
       </section>
       <section class="third">
         <h2>Formats</h2>
-        <!-- Soon if backend ready :)
         <label>
           <input type="radio" name="format" value="video" checked>
           Video
         </label>
-        -->
         <label>
-          <input type="radio" name="format" value="audio" checked>
+          <input type="radio" name="format" value="audio">
           Audio
         </label>
       </section>
-      <!--
       <div>
         <h2>Resolutions</h2>
         <div class="resolutions"></div>
       </div>
-      -->
       <button class="down-btn">Convert & Download</button>
     </div>
   </body>
