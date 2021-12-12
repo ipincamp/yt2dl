@@ -1,6 +1,4 @@
 /* eslint-disable arrow-parens */
-/* eslint-disable no-shadow */
-
 /**
  * Import all required modules
  */
@@ -24,7 +22,7 @@ const getResolutions = formats => chain(formats)
   .value();
 
 /**
- * Get video information
+ * Gather Information
  */
 app.get(
   '/api/video',
@@ -76,14 +74,28 @@ app.get(
     const { id, format } = req.query;
 
     ytdl.getInfo(id)
-      .then(({ videoDetails }) => {
+      .then(({ videoDetails, formats }) => {
         const { title } = videoDetails;
 
         const streams = {};
 
         // Select format type
         if (format === 'video') {
-          streams.video = ytdl(id, { quality: 'highest' });
+          // Const resolution = parseInt(req.query.resolution);
+
+          const videoFormat = chain(formats)
+            .filter('height')
+            .map('height')
+            .uniq()
+            .orderBy('fps', 'desc')
+            .head()
+            .value();
+            // From before
+            // .filter(({ height, videoCodec }) => {
+            //   height === resolution && videoCodec?.startsWith('avc1');
+            // })
+
+          streams.video = ytdl(id, { quality: videoFormat.itag });
           streams.audio = ytdl(id, { quality: 'highestaudio' });
         }
 
@@ -107,6 +119,7 @@ app.get(
         const contentType = contentTypes[format];
         const filename = `${encodeURI(sanitize(title))}.${ext}`;
 
+        // Output here
         res.header('Content-Type', contentType);
         res.header('Content-Disposition', `attachment; filename=${filename}; filename*=utf-8''${filename}`);
 
@@ -117,7 +130,10 @@ app.get(
           audio: 4,
         };
 
-        // Stream codec
+        /**
+         * Stream Codec
+         * Reference on: https://digitalfortress.tech/tips/encode-videos-with-ffmpeg/
+         */
         const ffmpegInputOptions = {
           video: [
             '-i', `pipe:${pipes.video}`,
@@ -125,6 +141,7 @@ app.get(
             '-map', '0:v',
             '-map', '1:a',
             '-c:v', 'copy',
+            // Alternate using 'vp9' for convert audio
             '-c:a', 'libmp3lame',
             '-crf', '27',
             '-preset', 'veryfast',
@@ -161,6 +178,7 @@ app.get(
           console.error(err);
         };
 
+        // eslint-disable-next-line no-shadow
         forEach(streams, (stream, format) => {
           const dest = ffmpegProcess.stdio[pipes[format]];
           stream.pipe(dest).on('error', handleFFmpegStreamError);
@@ -192,6 +210,11 @@ app.get(
 
 // Start event
 const port = 5000;
+/**
+ * Change the port as you wish,
+ * if you want to hide the port
+ * use the value 80 or set your web server
+ */
 app.listen(
   port,
   () => {
