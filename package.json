@@ -7,7 +7,6 @@
   "homepage": "https://github.com/ariflitejek/pinytdl#readme",
   "main": "main.js",
   "scripts": {
-    "install": "npm i",
     "start": "node main.js"
   },
   "engines": {
