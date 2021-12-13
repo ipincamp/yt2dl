@@ -1,6 +1,7 @@
 const startBtn = document.querySelector('.start-btn');
 const sectionSecond = document.querySelector('section.second');
 const sectionThird = document.querySelector('section.third');
+const sectionFourth = document.querySelector('section.fourth');
 const videoURL = document.querySelector('.video-url');
 const videoTmbImg = document.querySelector('.video-tmb');
 const videoTtl = document.querySelector('.video-ttl');
@@ -24,10 +25,8 @@ const getVideoInfo = async(id) => {
 const showResolutions = resolutions => {
   const html = resolutions
     .map((resolution, i) => `
-      <label>
-        <input type="radio" name="resolution" value="${resolution}" ${i === 0 ? 'checked' : ''}>
-        ${resolution}
-      </label>
+      <input type="radio" name="resolution" id="${resolution}" value="${resolution}" ${i === 0 ? 'checked' : ''}>
+      <label for="${resolution}">${resolution}</label>
     `)
     .join('');
   resolutionsDiv.innerHTML = html;
@@ -64,7 +63,7 @@ startBtn.addEventListener(
     const { title, resolutions, thumbnailURL } = await getVideoInfo(id);
 
     // DOM CSS
-    [sectionSecond, sectionThird].forEach(e => e.style.display = 'block');
+    [sectionSecond, sectionThird, sectionFourth].forEach(e => e.style.display = 'block');
     downBtn.style.display = 'inline-block';
 
     videoTtl.textContent = title;
@@ -73,6 +72,13 @@ startBtn.addEventListener(
     showResolutions(resolutions);
   },
 );
+
+sectionThird.addEventListener('click', e => {
+  if (e.target.defaultValue == 'video') {
+    sectionFourth.style.display = 'block';
+  } else if (e.target.defaultValue == 'audio') {
+    sectionFourth.style.display = 'none';  }
+})
 
 downBtn.addEventListener(
   'click',

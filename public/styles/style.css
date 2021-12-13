@@ -9,7 +9,7 @@ body {
   max-width: 500px;
   text-align: center;
   background-color: #444;
-  padding: 50px;
+  padding: 30px;
   border-radius: 10px;
   box-shadow: 2px 2px 5px #333;
   position: relative;
@@ -52,7 +52,7 @@ section.second {
   padding: 20px;
   border-radius: 10px;
   background-color: #555;
-  margin: 30px auto;
+  margin: 20px auto;
   font-weight: bold;
   box-shadow: 2px 2px 5px #333;
   /*min-height: 207.02px;*/
@@ -103,6 +103,15 @@ section.second .video-ttl {
   padding: 8px;
   border-radius: 10px;
   background-color: #555;
-  margin-top: 30px;
+  margin-top: 20px;
   display: none;
+}
+
+.container section.fourth {
+  display: none;
+  box-shadow: 2px 2px 5px #333;
+  border-radius: 10px;
+  background-color: #555;
+  padding: 8px;
+  margin-top: 20px;
 }
