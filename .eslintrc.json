@@ -12,7 +12,8 @@
         "ecmaVersion": 12
     },
     "rules": {
-        "linebreak-style": ["error", "windows"],
+        // Change to "windows" for windows user
+        "linebreak-style": ["error", "unix"],
         "no-await-in-loop": "off",
         "no-compare-neg-zero": "error",
         "no-extra-parens": [
