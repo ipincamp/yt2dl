@@ -1,7 +1,7 @@
 {
   "name": "pinytdl",
   "version": "1.0.0",
-  "description": "YouTube Video Downloader using JavaScript",
+  "description": "YouTube Video & Audio Downloader using JavaScript",
   "author": "ariflitejek",
   "license": "GPL-3.0",
   "homepage": "https://github.com/ariflitejek/pinytdl#readme",
@@ -25,7 +25,6 @@
     "url": "https://github.com/ariflitejek/pinytdl/issues"
   },
   "dependencies": {
-    "child_process": "^1.0.2",
     "express": "^4.17.1",
     "express-validation": "^3.0.8",
     "ffmpeg-static": "^4.4.0",
