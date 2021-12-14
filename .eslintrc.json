@@ -12,7 +12,9 @@
         "ecmaVersion": 12
     },
     "rules": {
-        // Change to "windows" for windows user
+        "implicit-arrow-linebreak": "off",
+        "no-tabs": "off",
+        // change to "windows" for windows user
         "linebreak-style": ["error", "unix"],
         "no-await-in-loop": "off",
         "no-compare-neg-zero": "error",
