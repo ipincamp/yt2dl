@@ -1,25 +1,25 @@
-/* eslint-disable arrow-parens */
 /**
  * Import all required modules
  */
 const express = require('express');
+const ffmpegPath = require('ffmpeg-static');
+const sanitize = require('sanitize-filename');
 const ytdl = require('ytdl-core');
 const { chain, last, forEach } = require('lodash');
 const { Joi, validate } = require('express-validation');
 const { spawn } = require('child_process');
-const ffmpegPath = require('ffmpeg-static');
-const sanitize = require('sanitize-filename');
 
 const app = express();
 
 app.use(express.static('public'));
 
-const getResolutions = formats => chain(formats)
-  .filter('height')
-  .map('height')
-  .uniq()
-  .orderBy(null, 'desc')
-  .value();
+const getResolutions = formats =>
+  chain(formats)
+    .filter('height')
+    .map('height')
+    .uniq()
+    .orderBy(null, 'desc')
+    .value();
 
 /**
  * Gather Information
@@ -81,21 +81,25 @@ app.get(
 
         // Select format type
         if (format === 'video') {
-          // Const resolution = parseInt(req.query.resolution);
+          // eslint-disable-next-line radix
+          const resolution = parseInt(req.query.resolution);
+
+          const resolutions = getResolutions(formats);
+
+          if (!resolutions.includes(resolution)) {
+            return next(new Error('Resolution is incorrect'));
+          }
 
           const videoFormat = chain(formats)
-            .filter('height')
-            .map('height')
-            .uniq()
+          // eslint-disable-next-line array-callback-return
+            .filter(({ height, videoCodec }) => {
+              // eslint-disable-next-line no-unused-expressions
+              height === resolution && videoCodec?.startsWith('avc1');
+            })
             .orderBy('fps', 'desc')
             .head()
             .value();
-            // From before
-            // .filter(({ height, videoCodec }) => {
-            //   height === resolution && videoCodec?.startsWith('avc1');
-            // })
-
-          streams.video = ytdl(id, { quality: videoFormat.itag });
+          streams.video = ytdl(id, { quality: videoFormat });
           streams.audio = ytdl(id, { quality: 'highestaudio' });
         }
 
@@ -153,7 +157,7 @@ app.get(
             '-c:a', 'libmp3lame',
             '-vn',
             '-ar', '44100',
-            '-ac', 2,
+            '-ac', '2',
             '-b:a', '192k',
             '-f', 'mp3',
           ],
@@ -174,6 +178,7 @@ app.get(
         );
 
         // Litle change for debug
+        // eslint-disable-next-line arrow-parens
         const handleFFmpegStreamError = (err) => {
           console.error(err);
         };
@@ -190,12 +195,14 @@ app.get(
         let ffmpegLogs = '';
         ffmpegProcess.stdio[pipes.err].on(
           'data',
+          // eslint-disable-next-line arrow-parens
           (chunk) => ffmpegLogs += chunk.toString(),
         );
 
         // End process
         ffmpegProcess.on(
           'exit',
+          // eslint-disable-next-line arrow-parens
           (exitCode) => {
             if (exitCode === 1) {
               console.error(ffmpegLogs);
