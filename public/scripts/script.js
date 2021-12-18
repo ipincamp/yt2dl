@@ -11,6 +11,9 @@ const downBtn = document.querySelector('.down-btn');
 // Filter url to get ID only
 const getVideoId = () => {
   const url = videoURL.value;
+  if (url.includes('youtu.be')) {
+    return url.slice(-11);
+  }
   const searchParams = new URLSearchParams(url.split('?')[1]);
   return searchParams.get('v');
 };
@@ -74,11 +77,14 @@ startBtn.addEventListener(
 );
 
 sectionThird.addEventListener('click', e => {
+  // eslint-disable-next-line eqeqeq
   if (e.target.defaultValue == 'video') {
     sectionFourth.style.display = 'block';
+  // eslint-disable-next-line eqeqeq
   } else if (e.target.defaultValue == 'audio') {
-    sectionFourth.style.display = 'none';  }
-})
+    sectionFourth.style.display = 'none';
+  }
+});
 
 downBtn.addEventListener(
   'click',
