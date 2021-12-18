@@ -30,7 +30,7 @@
     "ffmpeg-static": "^4.4.0",
     "lodash": "^4.17.21",
     "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.9.2"
   },
   "devDependencies": {
     "eslint": "^8.4.1",
