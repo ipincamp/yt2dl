@@ -15,7 +15,7 @@
         "implicit-arrow-linebreak": "off",
         "no-tabs": "off",
         // change to "windows" for windows user
-        "linebreak-style": ["error", "unix"],
+        "linebreak-style": ["error", "windows"],
         "no-await-in-loop": "off",
         "no-compare-neg-zero": "error",
         "no-extra-parens": [
