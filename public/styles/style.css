@@ -39,12 +39,12 @@ section.first {
   width: 80px;
   border-radius: 5px;
   color: #fff;
-  font-weight: bold; 
+  font-weight: bold;
   box-shadow: 2px 2px 5px #333;
 }
 
 .container section.first .start-btn:hover {
-  background-color: #0E81CE;
+  background-color: #0e81ce;
   box-shadow: 2px 2px 5px #333;
 }
 
@@ -63,7 +63,7 @@ section.second .video-tmb {
   max-width: 250px;
   border-radius: 10px;
   /*border: 3px solid cyan;*/
-  transition: .4s filter;
+  transition: 0.4s filter;
   box-shadow: 2px 2px 5px #333;
 }
 
@@ -92,7 +92,7 @@ section.second .video-ttl {
   background-color: #8dd435;
 }
 
-.down-btn:active, 
+.down-btn:active,
 .container section.first .start-btn:active {
   transform: translateY(2.5px);
   box-shadow: 2px 2px 3px #222;
