@@ -6,34 +6,33 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Downloader</title>
-  <link rel="stylesheet" href="https://unpkg.com/destyle.css@2.0.2/destyle.css">
-  <link rel="stylesheet" href="./styles/style.css">
-  <script src="./scripts/script.js" defer></script>
+  <link rel="stylesheet" href="./index.css">
+  <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
+  <script src="./index.js" defer></script>
 </head>
 
 <body>
-  <div class="container">
-    <section class="first">
-      <input type="url" class="video-url" value="" placeholder="Paste Youtube link here">
-      <button class="start-btn">Search</button>
-    </section>
-    <section class="second">
-      <img src="" alt="" class="video-tmb">
-      <div class="video-ttl"></div>
-    </section>
-    <section class="third">
-      <h2>Formats</h2>
-      <input type="radio" name="format" id="video" value="video" checked>
-      <label for="video">Video</label>
-      <input type="radio" name="format" id="audio" value="audio">
-      <label for="audio">Audio</label>
-    </section>
-    <section class="fourth">
-      <h2>Resolutions</h2>
-      <div class="resolutions"></div>
-    </section>
-    <button class="down-btn">Convert & Download</button>
+  <div>
+    <input class="url" value="" placeholder="Paste YouTube Link Here">
+    <button class="cvb">Search</button>
   </div>
+  <div>
+    <img src="" alt="" class="tmb">
+    <div class="ttl"></div>
+    <div class="own"></div>
+  </div>
+  <div>
+    <h2>Formats</h2>
+    <label>
+      <input type="radio" name="format" value="audio" checked>
+      Audio
+    </label>
+    <label>
+      <input type="radio" name="format" value="video">
+      Video
+    </label>
+  </div>
+  <button class="dwn">Download</button>
 </body>
 
 </html>
