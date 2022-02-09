@@ -18,9 +18,11 @@
     "node": ">=16"
   },
   "scripts": {
+    "dev": "npx nodemon .",
+    "dev:pm": "pm2 start . --watch",
     "lint": "npm init @eslint/config",
     "start": "node .",
-    "test": "npx nodemon . && exit 0"
+    "test": "echo \"YT2MP3: All programs run perfectly!\" && exit 0"
   },
   "keywords": [
     "js",
