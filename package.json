@@ -1,23 +1,33 @@
 {
-  "name": "pinytdl",
-  "version": "1.0.0",
-  "description": "YouTube Video & Audio Downloader using JavaScript",
-  "author": "ariflitejek",
+  "name": "yt2mp3",
+  "version": "1.0.1",
+  "description": "YouTube Video & Audio Downloader using NodeJS",
+  "private": true,
+  "author": "ipincamp",
   "license": "GPL-3.0",
-  "bugs": "https://github.com/ariflitejek/pinytdl/issues",
-  "homepage": "https://github.com/ariflitejek/pinytdl#readme",
-  "repository": "git@github.com:ipincamp/pinytdl.git",
-  "main": "main.js",
-  "scripts": {
-    "start": "node main.js"
+  "bugs": {
+    "url": "https://github.com/ipincamp/yt2mp3/issues"
   },
+  "homepage": "https://github.com/ipincamp/yt2mp3#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipincamp/yt2mp3.git"
+  },
+  "main": "index.js",
   "engines": {
     "node": ">=16"
   },
+  "scripts": {
+    "lint": "npm init @eslint/config",
+    "start": "node .",
+    "test": "npx nodemon ."
+  },
   "keywords": [
+    "js",
     "javascript",
+    "nodejs",
     "ytdl",
-    "nodejs"
+    "yt2mp3"
   ],
   "dependencies": {
     "express": "^4.17.2",
@@ -25,6 +35,12 @@
     "ffmpeg-static": "^4.4.1",
     "lodash": "^4.17.21",
     "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.10.0"
+    "ytdl-core": "^4.10.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "nodemon": "^2.0.15"
   }
 }
