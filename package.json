@@ -20,7 +20,7 @@
   "scripts": {
     "lint": "npm init @eslint/config",
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "npx nodemon . && exit 0"
   },
   "keywords": [
     "js",
