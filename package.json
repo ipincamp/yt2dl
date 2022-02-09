@@ -19,8 +19,7 @@
   },
   "scripts": {
     "lint": "npm init @eslint/config",
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "keywords": [
     "js",
