@@ -6,40 +6,38 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Downloader</title>
-  <link rel="stylesheet" href="https://unpkg.com/destyle.css@2.0.2/destyle.css">
-  <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="./styles/style.css">
   <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
-  <script src="./index.js" defer></script>
 </head>
 
 <body>
-  <div class="d-flex">
-    <input class="input url flex-1 mr-10" value="https://www.youtube.com/watch?v=o-3BfOV-XvY" placeholder="Paste YouTube Link Here">
-    <button class="btn cvb">Search</button>
-  </div>
-  <div class="d-none vfs">
-    <div class="d-flex ai-start">
-      <img src="" alt="" class="tmb mr-20">
-      <div>
-        <div class="ttl mb-20"></div>
-        <div class="own mb-20"></div>
-        <button class="rounded small-text btn dwn">Download</button>
-      </div>
+
+  <div class="main-container">
+    <div class="item-container">
+      <section class="search">
+        <input type="url" class="url" value="" placeholder="Paste Youtube link here">
+        <button class="cvb">Search</button>
+      </section>
+      <section class="info">
+        <img src="" alt="" class="tmb">
+        <div class="ttl"></div>
+        <div class="own"></div>
+      </section>
+
+      <section class="download">
+        <div class="format">
+          <select id="format">
+            <option value="audio">Audio (default)</option>
+            <option value="audio">Audio</option>
+            <option value="video">Video</option>
+          </select>
+        </div>
+        <button class="dwn">Download</button>
+      </section>
     </div>
   </div>
-  <div class="d-none frs">
-    <h2 class="section-title">Formats</h2>
-    <div class="d-flex gap-10">
-      <label class="custom-radio">
-        <input type="radio" name="format" value="audio" checked>
-        <div class="custom-radio-btn">Audio</div>
-      </label>
-      <label class="custom-radio">
-        <input type="radio" name="format" value="video">
-        <div class="custom-radio-btn">Video</div>
-      </label>
-    </div>
-  </div>
+
+  <script src="./scripts/script.js" defer></script>
 </body>
 
 </html>
