@@ -33,16 +33,32 @@ app.get(
   (req, res, next) => {
     /**
      * Example video link:
-     * NWZv524Yl74
+     * https://www.youtube.com/watch?v=o-3BfOV-XvY
      */
     const { id } = req.query;
 
     ytdl.getInfo(id).then(({ videoDetails }) => {
-      const { title, thumbnails, ownerChannelName } = videoDetails;
+      const {
+        title,
+        thumbnails,
+        ownerChannelName,
+        publishDate,
+      } = videoDetails;
       const thumbnail = last(thumbnails).url;
       const owner = ownerChannelName;
 
-      res.json({ title, owner, thumbnail });
+      function invertDate(str) {
+        return str.split('-').reverse().join('-');
+      }
+
+      const uploadDate = invertDate(publishDate);
+
+      res.json({
+        title,
+        owner,
+        uploadDate,
+        thumbnail,
+      });
     }).catch((err) => next(err));
   },
 );
