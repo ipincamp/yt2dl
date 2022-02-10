@@ -3,7 +3,11 @@
   "version": "1.0.1",
   "description": "YouTube Video & Audio Downloader using NodeJS",
   "private": true,
-  "author": "ipincamp",
+  "author": "ipincamp <support@nur-arifin.my.id>",
+  "contributors": [
+    "ipincamp",
+    "aliazhar-id"
+  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/ipincamp/yt2mp3/issues"
@@ -19,10 +23,10 @@
   },
   "scripts": {
     "dev": "npx nodemon .",
-    "dev:pm": "pm2 start . --watch",
-    "lint": "npm init @eslint/config",
+    "dev:start": "pm2 start . --watch",
+    "dev:eslint": "npm init @eslint/config",
     "start": "node .",
-    "test": "echo \"YT2MP3: All programs run perfectly!\" && exit 0"
+    "test": "echo \"Tests have been done before being pushed to version control\" && exit 0"
   },
   "keywords": [
     "js",
