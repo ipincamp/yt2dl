@@ -107,7 +107,7 @@ app.get(
 
       const ext = exts[format];
       const contentType = contentTypes[format];
-      const filename = `ytdl.nur-arifin.my.id - ${encodeURI(sanitize(title))}.${ext}`;
+      const filename = `yt2mp3 - ${encodeURI(sanitize(title))}.${ext}`;
 
       res.setHeader('Content-Type', contentType);
       res.setHeader('Content-Disposition', `attachment; filename=${filename}; filename*=utf-8''${filename}`);
