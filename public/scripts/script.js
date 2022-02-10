@@ -49,10 +49,15 @@ const download = ({ id, format }) => {
 
 cvButton.addEventListener('click', async () => {
   const id = getVideoID();
-  const { title, owner, thumbnail } = await getVideoInfo(id);
+  const {
+    title,
+    owner,
+    thumbnail,
+    uploadDate,
+  } = await getVideoInfo(id);
 
   videoTtl.textContent = title;
-  videoOwn.textContent = `By ${owner}`;
+  videoOwn.textContent = `${owner} ~ ${uploadDate}`;
   thumbURL.src = thumbnail;
 
   document.querySelector('.item-container section:nth-child(2)').style.display = 'block';
