@@ -11,6 +11,8 @@ const thumbURL = document.querySelector('.tmb');
 const videoTtl = document.querySelector('.ttl');
 const videoOwn = document.querySelector('.own');
 const downBttn = document.querySelector('.dwn');
+const frmtSect = document.querySelector('.frs');
+const videoSec = document.querySelector('.vfs');
 
 const getVideoID = () => {
   const url = inputURL.value;
@@ -28,6 +30,8 @@ const getVideoInfo = async (id) => {
 
   return res.json();
 };
+
+const show = (el) => el.classList.remove('d-none');
 
 const getFormats = (name) => document.querySelector(`[name="${name}"]:checked`).value;
 
@@ -50,10 +54,18 @@ cvButton.addEventListener(
   'click',
   async () => {
     const id = getVideoID();
-    const { title, owner, thumbnail } = await getVideoInfo(id);
+    const {
+      title,
+      owner,
+      uploadDate,
+      thumbnail,
+    } = await getVideoInfo(id);
+
+    show(frmtSect);
+    show(videoSec);
 
     videoTtl.textContent = title;
-    videoOwn.textContent = `By ${owner}`;
+    videoOwn.textContent = `${owner} - ${uploadDate}`;
     thumbURL.src = thumbnail;
   },
 );
