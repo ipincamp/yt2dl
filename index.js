@@ -12,6 +12,7 @@ const { fetchAPI } = require('./src/fetchAPI');
 
 const app = express();
 const port = process.env.PORT || 8000;
+app.use(express.static('public'));
 
 const eventFiles = fs.readdirSync(join(__dirname, './src/events'))
   .filter((x) => x.endsWith('.js'));
@@ -28,4 +29,3 @@ setInterval(() => {
 }, 299000);
 
 app.listen(port);
-app.use(express.static('public'));
