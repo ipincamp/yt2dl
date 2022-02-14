@@ -40,6 +40,7 @@
     "express-validation": "^3.0.8",
     "ffmpeg-static": "^4.4.1",
     "lodash": "^4.17.21",
+    "node-fetch": "^2.6.7",
     "sanitize-filename": "^1.6.3",
     "ytdl-core": "^4.10.1"
   },
