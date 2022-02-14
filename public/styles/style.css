@@ -26,9 +26,7 @@ body {
   text-align: center;
   padding: 5px;
   margin: auto;
-  padding: 20px;
-  padding-top: 100px;
-  padding-bottom: 100px;
+  padding: 100px 20px;
 }
 
 .content-container {
@@ -67,7 +65,7 @@ section.search {
 }
 
 section.search input {
-  width: 65%;
+  width: 70%;
   height: 2.6em;
   line-height: 2.6em;
   border-radius: 6px;
@@ -76,7 +74,7 @@ section.search input {
   padding: 0 0.9em;
   outline: none;
   color: #eee;
-  font-size: 100%;
+  font-size: auto;
   text-align: center;
   margin-bottom: 20px;
   box-shadow: 0px 0px 5px 0.5px #ccc;
@@ -136,6 +134,7 @@ section.info .inforight .ttl {
 }
 
 section.info .infoleft img {
+  width: 100%;
   max-width: 250px;
   border-radius: 10px;
   box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
@@ -145,14 +144,16 @@ section.info .infoleft img {
 /* ||                       Download                             */
 /* ============================================================= */
 section.download .format {
-  display: grid;
-  grid-auto-flow: column;
-  place-items: center;
-  width: 230px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
   margin: auto;
   color: #eee;
   user-select: none;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 section.download .format input {
@@ -180,7 +181,7 @@ input:checked + .custom-radio-btn:hover {
 }
 
 section.download label {
-  width: 100px;
+  width: 80px;
 }
 
 section.download .dwn {
@@ -192,6 +193,9 @@ section.download .dwn {
   border: none;
   font-weight: bold;
   box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
+  width: 100%;
+  max-width: 115px;
+  min-width: 85px;
 }
 
 section.download .dwn:hover {
