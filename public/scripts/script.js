@@ -11,8 +11,15 @@ const thumbURL = document.querySelector('.tmb');
 const videoTtl = document.querySelector('.ttl');
 const videoOwn = document.querySelector('.own');
 const downBttn = document.querySelector('.dwn');
+const errorURL = document.querySelector('.eru');
 const SectInfo = document.querySelector('section.info');
 const SectDown = document.querySelector('section.download');
+
+const getID = () => {
+  const url = inputURL.value;
+
+  return url;
+};
 
 const getVideoID = () => {
   const url = inputURL.value;
@@ -51,27 +58,62 @@ const download = ({ id, format }) => {
 };
 
 cvButton.addEventListener('click', async () => {
-  const id = getVideoID();
-  const {
-    title,
-    owner,
-    uploadDate,
-    thumbnail,
-  } = await getVideoInfo(id);
+  try {
+    const id = getID();
 
-  videoTtl.textContent = title;
-  videoOwn.textContent = `${owner} - ${uploadDate}`;
-  thumbURL.src = thumbnail;
+    if (id === null) {
+      errorURL.innerHTML = 'Please enter a valid link!';
+      return;
+    }
 
-  show(SectInfo, SectDown);
+    const {
+      title,
+      owner,
+      uploadDate,
+      thumbnail,
+    } = await getVideoInfo(id);
+
+    videoTtl.textContent = title;
+    videoOwn.textContent = `${owner} - ${uploadDate}`;
+    thumbURL.src = thumbnail;
+
+    show(SectInfo, SectDown);
+  } catch {
+    const id = getVideoID();
+
+    if (id === null) {
+      errorURL.innerHTML = 'Please enter a valid link!';
+      return;
+    }
+
+    const {
+      title,
+      owner,
+      uploadDate,
+      thumbnail,
+    } = await getVideoInfo(id);
+
+    videoTtl.textContent = title;
+    videoOwn.textContent = `${owner} - ${uploadDate}`;
+    thumbURL.src = thumbnail;
+
+    show(SectInfo, SectDown);
+  }
 });
 
 downBttn.addEventListener(
   'click',
   () => {
-    download({
-      id: getVideoID(),
-      format: getFormats('format'),
-    });
+    try {
+      download({
+        id: getID(),
+        format: getFormats('format'),
+      });
+    } catch {
+      download({
+        id: getVideoID(),
+        format: getFormats('format'),
+      });
+    }
   },
 );
