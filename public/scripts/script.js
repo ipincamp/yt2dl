@@ -63,8 +63,13 @@ cvButton.addEventListener('click', async () => {
 
     if (id === null) {
       errorURL.innerHTML = 'Please enter a valid link!';
+      errorURL.style.cssText += 'padding-bottom: 20px';
       return;
     }
+
+    setTimeout(() => {
+      document.getElementById('eru').hidden = true;
+    }, 3000);
 
     const {
       title,
@@ -83,8 +88,13 @@ cvButton.addEventListener('click', async () => {
 
     if (id === null) {
       errorURL.innerHTML = 'Please enter a valid link!';
+      errorURL.style.cssText += 'padding-bottom: 20px';
       return;
     }
+
+    setTimeout(() => {
+      document.getElementById('eru').hidden = true;
+    }, 3000);
 
     const {
       title,
@@ -105,15 +115,23 @@ downBttn.addEventListener(
   'click',
   () => {
     try {
-      download({
-        id: getID(),
-        format: getFormats('format'),
-      });
+      try {
+        download({
+          id: getID(),
+          format: getFormats('format'),
+        });
+      } catch (err) {
+        console.error(err);
+      }
     } catch {
-      download({
-        id: getVideoID(),
-        format: getFormats('format'),
-      });
+      try {
+        download({
+          id: getVideoID(),
+          format: getFormats('format'),
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
   },
 );
