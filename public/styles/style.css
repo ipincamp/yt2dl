@@ -107,6 +107,10 @@ section.search button:active {
   background-color: #0475bf;
 }
 
+section.search div {
+  color: yellowgreen;
+}
+
 /* ============================================================= */
 /* ||                       Info                                 */
 /* ============================================================= */
