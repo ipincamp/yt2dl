@@ -5,26 +5,6 @@
  * @license GNU (General Public License v3.0)
  */
 
-/*
-Examples URL
-
-https://www.youtube.com/playlist?list=PL4C2OaC1jQqT2W-uYxIw7_NMzlTE2x7vF
-
-https://www.youtube.com/watch?v=ke2sYmDr_JM
-
-Filtering id with lodash
-const getIdByPlaylists = (objectArray) => chain(objectArray)
-  .filter('id')
-  .map('id')
-  .uniq()
-  .orderBy('index', 'desc')
-  .value();
-
-Usage:
-const id = getIdByPlaylists(objectArray);
-
-*/
-
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const { Joi, validate } = require('express-validation');
@@ -73,20 +53,11 @@ module.exports = {
           let videos = [];
 
           items.forEach((v) => {
-            videos.push({
-              index: v.index,
-              title: v.title,
-              url: v.shortUrl,
-              owner: v.author.name,
-              thumbnail: last(v.thumbnails).url,
-            });
+            videos.push([v.index, v.title, v.shortUrl]);
           });
 
           res.json({
-            title,
-            owner,
-            thumbnail,
-            videos,
+            title, owner, thumbnail, videos,
           });
         })
         .catch((err) => next(err));
