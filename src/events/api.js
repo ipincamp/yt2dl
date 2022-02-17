@@ -5,6 +5,26 @@
  * @license GNU (General Public License v3.0)
  */
 
+/*
+Examples URL
+
+https://www.youtube.com/playlist?list=PL4C2OaC1jQqT2W-uYxIw7_NMzlTE2x7vF
+
+https://www.youtube.com/watch?v=ke2sYmDr_JM
+
+Filtering id with lodash
+const getIdByPlaylists = (objectArray) => chain(objectArray)
+  .filter('id')
+  .map('id')
+  .uniq()
+  .orderBy('index', 'desc')
+  .value();
+
+Usage:
+const id = getIdByPlaylists(objectArray);
+
+*/
+
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const { Joi, validate } = require('express-validation');
@@ -19,39 +39,33 @@ module.exports = {
       }),
     });
     const { id } = req.query;
+
     try {
-      await ytdl
-        .getInfo(id)
-        .then(({ videoDetails }) => {
-          const {
-            title, thumbnails, ownerChannelName, publishDate,
-          } = videoDetails;
-          const thumbnail = last(thumbnails).url;
-          const owner = ownerChannelName;
+      await ytdl.getInfo(id).then(({ videoDetails }) => {
+        const {
+          title, thumbnails, ownerChannelName, publishDate,
+        } = videoDetails;
+        const thumbnail = last(thumbnails).url;
+        const owner = ownerChannelName;
 
-          function invertDate(str) {
-            return str.split('-').reverse().join('/');
-          }
+        function invertDate(str) {
+          return str.split('-').reverse().join('/');
+        }
 
-          const uploadDate = invertDate(publishDate);
+        const uploadDate = invertDate(publishDate);
 
-          res.json({
-            title,
-            owner,
-            uploadDate,
-            thumbnail,
-          });
+        res.json({
+          title,
+          owner,
+          uploadDate,
+          thumbnail,
         });
+      });
     } catch {
       await ytpl(id)
         .then((details) => {
           let {
-            author,
-            estimatedItemCount,
-            items,
-            title,
-            thumbnails,
-            url,
+            author, items, title, thumbnails,
           } = details;
 
           const owner = author.name;
@@ -59,9 +73,11 @@ module.exports = {
           let videos = [];
 
           items.forEach((v) => {
-            videos.push(v.id, {
-              owner: v.author.name,
+            videos.push({
+              index: v.index,
               title: v.title,
+              url: v.shortUrl,
+              owner: v.author.name,
               thumbnail: last(v.thumbnails).url,
             });
           });
@@ -69,12 +85,11 @@ module.exports = {
           res.json({
             title,
             owner,
-            url,
-            estimatedItemCount,
             thumbnail,
             videos,
           });
-        }).catch((err) => next(err));
+        })
+        .catch((err) => next(err));
     }
   },
 };
