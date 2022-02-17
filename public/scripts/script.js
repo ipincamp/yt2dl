@@ -1,6 +1,6 @@
 /**
  * @name yt2mp3
- * @version v1.0.1
+ * @version v1.0.2
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
@@ -67,23 +67,30 @@ cvButton.addEventListener('click', async () => {
 
       setTimeout(() => {
         document.getElementById('eru').hidden = true;
+        window.location.reload();
       }, 3000);
 
       return;
     }
 
     const {
-      title,
-      owner,
-      uploadDate,
-      thumbnail,
+      title, owner, uploadDate, thumbnail,
     } = await getVideoInfo(id);
 
     if (uploadDate === undefined) {
-      setInterval(() => {
-        window.location.replace('./playlist.html');
-      }, 5000);
-      videoOwn.textContent = 'Playlist Detected!';
+      const { videos } = await getVideoInfo(id);
+
+      videoTtl.textContent = title;
+      videoOwn.textContent = owner;
+      let videoList = document.getElementById('lis');
+
+      videos.forEach((item) => {
+        let li = document.createElement('ul');
+        const content = `${item[0]}. ${item[1]} - <mark>${item[2]}</mark>`;
+
+        li.innerHTML += content;
+        videoList.appendChild(li);
+      });
 
       show(SectInfo);
     } else {
@@ -102,23 +109,30 @@ cvButton.addEventListener('click', async () => {
 
       setTimeout(() => {
         document.getElementById('eru').hidden = true;
+        window.location.reload();
       }, 3000);
 
       return;
     }
 
     const {
-      title,
-      owner,
-      uploadDate,
-      thumbnail,
+      title, owner, uploadDate, thumbnail,
     } = await getVideoInfo(id);
 
     if (uploadDate === undefined) {
-      setInterval(() => {
-        window.location.replace('./playlist.html');
-      }, 5000);
-      videoOwn.textContent = 'Playlist Detected!';
+      const { videos } = await getVideoInfo(id);
+
+      videoTtl.textContent = title;
+      videoOwn.textContent = owner;
+      let videoList = document.getElementById('lis');
+
+      videos.forEach((item) => {
+        let li = document.createElement('ul');
+        const content = `${item[0]}. ${item[1]} - <mark>${item[2]}</mark>`;
+
+        li.innerHTML += content;
+        videoList.appendChild(li);
+      });
 
       show(SectInfo);
     } else {
@@ -131,27 +145,24 @@ cvButton.addEventListener('click', async () => {
   }
 });
 
-downBttn.addEventListener(
-  'click',
-  () => {
+downBttn.addEventListener('click', () => {
+  try {
     try {
-      try {
-        download({
-          id: getID(),
-          format: getFormats('format'),
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    } catch {
-      try {
-        download({
-          id: getVideoID(),
-          format: getFormats('format'),
-        });
-      } catch (err) {
-        console.error(err);
-      }
+      download({
+        id: getID(),
+        format: getFormats('format'),
+      });
+    } catch (err) {
+      console.error(err);
     }
-  },
-);
+  } catch {
+    try {
+      download({
+        id: getVideoID(),
+        format: getFormats('format'),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+});
