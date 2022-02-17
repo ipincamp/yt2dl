@@ -21,7 +21,6 @@
     <div class="content-container">
       <section class="search">
         <input type="url" class="url" value="" placeholder="Paste Youtube link here!">
-        <!-- Handle empty input -->
         <div class="eru" id="eru"></div>
         <button class="cvb">Search</button>
       </section>
@@ -50,10 +49,13 @@
     </div>
   </div>
   <footer>
-    <p>&copy 2022 YT2MP3. All Rights Reserved.</p>
+    <p id="copyright"></p>
     <a href="https://github.com/ipincamp/yt2mp3"><i class="fa fa-github" style="font-size:36px"></i></a>
   </footer>
   <script src="./scripts/script.js" defer></script>
+  <script>
+    document.getElementById("copyright").innerHTML = `Copyright &copy ${new Date().getFullYear()} YT2MP3. All rights reserved.`
+  </script>
 </body>
 
 </html>
