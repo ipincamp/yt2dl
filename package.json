@@ -1,6 +1,6 @@
 {
   "name": "yt2mp3",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "YouTube Video & Audio Downloader using NodeJS",
   "private": true,
   "author": "ipincamp <support@nur-arifin.my.id>",
@@ -42,7 +42,8 @@
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.7",
     "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.10.1"
+    "ytdl-core": "^4.10.1",
+    "ytpl": "^2.2.3"
   },
   "devDependencies": {
     "eslint": "^8.9.0",
