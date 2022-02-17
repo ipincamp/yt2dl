@@ -64,12 +64,13 @@ cvButton.addEventListener('click', async () => {
     if (id === null) {
       errorURL.innerHTML = 'Please enter a valid link!';
       errorURL.style.cssText += 'padding-bottom: 20px';
+
+      setTimeout(() => {
+        document.getElementById('eru').hidden = true;
+      }, 3000);
+
       return;
     }
-
-    setTimeout(() => {
-      document.getElementById('eru').hidden = true;
-    }, 3000);
 
     const {
       title,
@@ -78,23 +79,33 @@ cvButton.addEventListener('click', async () => {
       thumbnail,
     } = await getVideoInfo(id);
 
-    videoTtl.textContent = title;
-    videoOwn.textContent = `${owner} - ${uploadDate}`;
-    thumbURL.src = thumbnail;
+    if (uploadDate === undefined) {
+      setInterval(() => {
+        window.location.replace('./playlist.html');
+      }, 5000);
+      videoOwn.textContent = 'Playlist Detected!';
 
-    show(SectInfo, SectDown);
+      show(SectInfo);
+    } else {
+      videoOwn.textContent = `${owner} - ${uploadDate}`;
+
+      show(SectInfo, SectDown);
+    }
+    videoTtl.textContent = title;
+    thumbURL.src = thumbnail;
   } catch {
     const id = getVideoID();
 
     if (id === null) {
       errorURL.innerHTML = 'Please enter a valid link!';
       errorURL.style.cssText += 'padding-bottom: 20px';
+
+      setTimeout(() => {
+        document.getElementById('eru').hidden = true;
+      }, 3000);
+
       return;
     }
-
-    setTimeout(() => {
-      document.getElementById('eru').hidden = true;
-    }, 3000);
 
     const {
       title,
@@ -103,11 +114,20 @@ cvButton.addEventListener('click', async () => {
       thumbnail,
     } = await getVideoInfo(id);
 
-    videoTtl.textContent = title;
-    videoOwn.textContent = `${owner} - ${uploadDate}`;
-    thumbURL.src = thumbnail;
+    if (uploadDate === undefined) {
+      setInterval(() => {
+        window.location.replace('./playlist.html');
+      }, 5000);
+      videoOwn.textContent = 'Playlist Detected!';
 
-    show(SectInfo, SectDown);
+      show(SectInfo);
+    } else {
+      videoOwn.textContent = `${owner} - ${uploadDate}`;
+
+      show(SectInfo, SectDown);
+    }
+    videoTtl.textContent = title;
+    thumbURL.src = thumbnail;
   }
 });
 
