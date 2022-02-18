@@ -23,6 +23,7 @@ for (const file of eventFiles) {
 }
 
 const url = 'https://y2v.herokuapp.com/';
+exports.urlFetch = url;
 
 setInterval(() => {
   fetchAPI(url);

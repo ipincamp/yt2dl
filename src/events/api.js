@@ -9,6 +9,7 @@ const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const { Joi, validate } = require('express-validation');
 const { last } = require('lodash');
+const { urlFetch } = require('../..');
 
 module.exports = {
   name: '/api',
@@ -35,12 +36,17 @@ module.exports = {
 
         const uploadDate = invertDate(publishDate);
 
+        const linkMP3 = `${urlFetch}convert?id=${id}&format=audio`;
+        const linkMP4 = `${urlFetch}convert?id=${id}&format=video`;
+
         res.json({
           title,
           owner,
           uploadDate,
           thumbnail,
           videoFormats,
+          linkMP3,
+          linkMP4,
         });
       });
     } catch {
