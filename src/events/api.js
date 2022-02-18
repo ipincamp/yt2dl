@@ -1,6 +1,6 @@
 /**
  * @name yt2mp3
- * @version v1.0.2
+ * @version v1.0.3
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
@@ -21,12 +21,13 @@ module.exports = {
     const { id } = req.query;
 
     try {
-      await ytdl.getInfo(id).then(({ videoDetails }) => {
+      await ytdl.getInfo(id).then(({ videoDetails, formats }) => {
         const {
           title, thumbnails, ownerChannelName, publishDate,
         } = videoDetails;
         const thumbnail = last(thumbnails).url;
         const owner = ownerChannelName;
+        const videoFormats = formats;
 
         function invertDate(str) {
           return str.split('-').reverse().join('/');
@@ -39,6 +40,7 @@ module.exports = {
           owner,
           uploadDate,
           thumbnail,
+          videoFormats,
         });
       });
     } catch {
@@ -50,6 +52,7 @@ module.exports = {
 
           const owner = author.name;
           const thumbnail = last(thumbnails).url;
+          const videoList = items;
           let videos = [];
 
           items.forEach((v) => {
@@ -57,7 +60,7 @@ module.exports = {
           });
 
           res.json({
-            title, owner, thumbnail, videos,
+            title, owner, thumbnail, videos, videoList,
           });
         })
         .catch((err) => next(err));
