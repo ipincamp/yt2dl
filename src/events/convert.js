@@ -1,6 +1,6 @@
 /**
  * @name yt2mp3
- * @version v1.0.1
+ * @version v1.0.3
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
@@ -36,7 +36,7 @@ module.exports = {
            * If you want to contribute to making the video quality selection,
            * please go to pull request
            */
-          streams.video = ytdl(id, { quality: 'highestvideo' });
+          streams.video = ytdl(id, { quality: 'highest' });
           streams.audio = ytdl(id, { quality: 'highestaudio' });
         }
 
@@ -86,11 +86,11 @@ module.exports = {
             '-map',
             '1:a',
             '-c:v',
-            'copy',
+            'h264',
             '-c:a',
             'libmp3lame',
             '-crf',
-            '27',
+            '18',
             '-preset',
             'veryfast',
             '-movflags',
