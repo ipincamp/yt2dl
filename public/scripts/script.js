@@ -66,7 +66,7 @@ cvButton.addEventListener('click', async () => {
   try {
     const id = getID();
 
-    if (id === null) {
+    if ((id === null) || (id === undefined)) {
       errorURL.innerHTML = 'Please enter a valid link!';
       errorURL.style.cssText += 'padding-bottom: 20px';
 
@@ -108,7 +108,7 @@ cvButton.addEventListener('click', async () => {
   } catch {
     const id = getVideoID();
 
-    if (id === null) {
+    if ((id === null) || (id === undefined)) {
       errorURL.innerHTML = 'Please enter a valid link!';
       errorURL.style.cssText += 'padding-bottom: 20px';
 
