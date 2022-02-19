@@ -3,11 +3,14 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     allow:
       - dependency-name: "express"
+      - dependency-name: "express-validation"
       - dependency-name: "ffmpeg-static"
       - dependency-name: "lodash"
+      - dependency-name: "sanitize-filename"
       - dependency-name: "ytdl-core"
+      - dependency-name: "ytpl"
     commit-message:
       prefix: "npm"
