@@ -9,7 +9,6 @@ const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const { Joi, validate } = require('express-validation');
 const { last } = require('lodash');
-const { urlFetch } = require('../..');
 
 module.exports = {
   name: '/api',
@@ -24,10 +23,14 @@ module.exports = {
     try {
       await ytdl.getInfo(id).then(({ videoDetails, formats }) => {
         const {
-          title, thumbnails, ownerChannelName, publishDate,
+          title,
+          thumbnails,
+          ownerChannelName,
+          publishDate,
         } = videoDetails;
-        const thumbnail = last(thumbnails).url;
+
         const owner = ownerChannelName;
+        const thumbnail = last(thumbnails).url;
         const videoFormats = formats;
 
         function invertDate(str) {
@@ -36,24 +39,22 @@ module.exports = {
 
         const uploadDate = invertDate(publishDate);
 
-        const linkMP3 = `${urlFetch}convert?id=${id}&format=audio`;
-        const linkMP4 = `${urlFetch}convert?id=${id}&format=video`;
-
         res.json({
           title,
           owner,
           uploadDate,
           thumbnail,
           videoFormats,
-          linkMP3,
-          linkMP4,
         });
       });
     } catch {
       await ytpl(id)
         .then((details) => {
           let {
-            author, items, title, thumbnails,
+            author,
+            items,
+            title,
+            thumbnails,
           } = details;
 
           const owner = author.name;
@@ -66,7 +67,11 @@ module.exports = {
           });
 
           res.json({
-            title, owner, thumbnail, videos, videoList,
+            title,
+            owner,
+            thumbnail,
+            videos,
+            videoList,
           });
         })
         .catch((err) => next(err));
