@@ -29,7 +29,7 @@ const getVideoID = () => {
       return url.slice(-11);
     }
     if (url.includes('shorts')) {
-      return new URLSearchParams(url.slice(27).split('?')[1]);
+      return new URLSearchParams(url.split('?')[0]);
     }
   } catch {
     const searchParams = new URLSearchParams(url.split('?')[1]);

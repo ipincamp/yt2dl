@@ -11,7 +11,7 @@ const { join } = require('path');
 const { fetchAPI } = require('./src/fetchAPI');
 
 const app = express();
-const port = process.env.PORT || Math.floor(Math.random() * (9999 - 6000 + 1)) + 6000;
+const port = process.env.PORT || Math.floor(Math.random() * (9999 - 8000 + 1)) + 8000;
 app.use(express.static('public'));
 
 const eventFiles = fs.readdirSync(join(__dirname, './src/events'))
