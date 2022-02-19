@@ -12,6 +12,7 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+        "consistent-return": "off",
         "func-names": "warn",
         "global-require": "off",
         "import/no-dynamic-require": "off",
