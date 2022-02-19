@@ -24,21 +24,17 @@ const getID = () => {
 const getVideoID = () => {
   const url = inputURL.value;
 
-  if (url.includes('youtu.be')) {
-    return url.slice(17);
+  try {
+    if (url.includes('youtu.be')) {
+      return url.slice(-11);
+    }
+    if (url.includes('shorts')) {
+      return new URLSearchParams(url.slice(27).split('?')[1]);
+    }
+  } catch {
+    const searchParams = new URLSearchParams(url.split('?')[1]);
+    return searchParams.get('v');
   }
-
-  if (url.includes('shorts')) {
-    return url.slice(27).split('?')[0];
-  }
-
-  if (url.includes('playlist')) {
-    return url.split('=')[1];
-  }
-
-  const searchParams = new URLSearchParams(url.split('?')[1]);
-
-  return searchParams.get('v');
 };
 
 const getVideoInfo = async (id) => {
