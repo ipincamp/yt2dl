@@ -1,6 +1,6 @@
 /**
  * @name yt2mp3
- * @version v1.0.2
+ * @version v1.0.3
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */

@@ -1,6 +1,6 @@
 {
   "name": "yt2mp3",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "YouTube Video & Audio Downloader using NodeJS",
   "private": true,
   "author": "ipincamp <support@nur-arifin.my.id>",
@@ -31,9 +31,15 @@
   "keywords": [
     "js",
     "javascript",
+    "node-ytdl",
     "nodejs",
     "ytdl",
-    "yt2mp3"
+    "youtubedl",
+    "youtube-dl",
+    "youtube-downloader",
+    "yt-downloader",
+    "yt2mp3",
+    "ytdl-nodejs"
   ],
   "dependencies": {
     "express": "^4.17.3",
