@@ -25,8 +25,17 @@ const getVideoID = () => {
   const url = inputURL.value;
 
   if (url.includes('youtu.be')) {
-    return url.slice(-11);
+    return url.slice(17);
   }
+
+  if (url.includes('shorts')) {
+    return url.slice(27).split('?')[0];
+  }
+
+  if (url.includes('playlist')) {
+    return url.split('=')[1];
+  }
+
   const searchParams = new URLSearchParams(url.split('?')[1]);
 
   return searchParams.get('v');
