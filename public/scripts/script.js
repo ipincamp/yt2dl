@@ -1,23 +1,23 @@
 /**
  * @name yt2mp3
- * @version v1.0.3
+ * @version v1.0.4
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
 
-const cvButton = document.querySelector('.cvb');
+const searchBT = document.querySelector('.cvb');
 const inputURL = document.querySelector('.url');
 const thumbURL = document.querySelector('.tmb');
 const videoTtl = document.querySelector('.ttl');
 const videoOwn = document.querySelector('.own');
-const downBttn = document.querySelector('.dwn');
+const download = document.querySelector('.dwn');
 const errorURL = document.querySelector('.eru');
 const SectInfo = document.querySelector('section.info');
+const SectFrmt = document.querySelector('section.format');
 const SectDown = document.querySelector('section.download');
 
 const getID = () => {
   const url = inputURL.value;
-
   return url;
 };
 
@@ -39,30 +39,28 @@ const getVideoID = () => {
 
 const getVideoInfo = async (id) => {
   const res = await fetch(`/api?id=${id}`);
-
   return res.json();
 };
 
-const show = (...args) => args.forEach((x) => x.classList.remove('d-none'));
+const getFormat = (name) => document.querySelector(`[name="${name}"]:checked`).value;
 
-const getFormats = (name) => document.querySelector(`[name="${name}"]:checked`).value;
-
-const getDownloadAnchor = ({ id, format }) => {
+const getDownloadAV = ({ id, format }) => {
   let url = `/convert?id=${id}&format=${format}`;
 
   const a = document.createElement('a');
   a.href = url;
   a.download = true;
-
   return a;
 };
 
-const download = ({ id, format }) => {
-  const a = getDownloadAnchor({ id, format });
+const downloadAV = ({ id, format }) => {
+  const a = getDownloadAV({ id, format });
   a.click();
 };
 
-cvButton.addEventListener('click', async () => {
+const show = (...args) => args.forEach((x) => x.classList.remove('d-none'));
+
+searchBT.addEventListener('click', async () => {
   try {
     const id = getID();
 
@@ -73,38 +71,44 @@ cvButton.addEventListener('click', async () => {
       setTimeout(() => {
         document.getElementById('eru').hidden = true;
         window.location.reload();
-      }, 3000);
+      }, 1500);
 
       return;
     }
 
     const {
-      title, owner, uploadDate, thumbnail,
+      videoTitle,
+      videoOwner,
+      videoUploadDate,
+      videoThumbnail,
     } = await getVideoInfo(id);
 
-    if (uploadDate === undefined) {
-      const { videos } = await getVideoInfo(id);
+    if (videoUploadDate === undefined) {
+      const {
+        plTitle,
+        plOwner,
+        plVideoLength,
+        plThumbnail,
+      } = await getVideoInfo(id);
 
-      videoTtl.textContent = title;
-      videoOwn.textContent = owner;
-      let videoList = document.getElementById('lis');
+      videoTtl.textContent = plTitle;
+      videoOwn.textContent = `${plOwner} - ${plVideoLength} video found`;
+      thumbURL.src = plThumbnail;
 
-      videos.forEach((item) => {
-        let li = document.createElement('ul');
-        const content = `${item[0]}. ${item[1]} - <mark>${item[2]}</mark>`;
+      /*
+      Fetch to playlist events
 
-        li.innerHTML += content;
-        videoList.appendChild(li);
-      });
-
-      show(SectInfo);
-    } else {
-      videoOwn.textContent = `${owner} - ${uploadDate}`;
+      await fetch(`/playlist?id=${plVideoID}`);
+      */
 
       show(SectInfo, SectDown);
+    } else {
+      videoOwn.textContent = `${videoOwner} - ${videoUploadDate}`;
+      videoTtl.textContent = videoTitle;
+      thumbURL.src = videoThumbnail;
+
+      show(SectInfo, SectFrmt);
     }
-    videoTtl.textContent = title;
-    thumbURL.src = thumbnail;
   } catch {
     const id = getVideoID();
 
@@ -115,59 +119,67 @@ cvButton.addEventListener('click', async () => {
       setTimeout(() => {
         document.getElementById('eru').hidden = true;
         window.location.reload();
-      }, 3000);
+      }, 1500);
 
       return;
     }
 
     const {
-      title, owner, uploadDate, thumbnail,
+      videoTitle,
+      videoOwner,
+      videoUploadDate,
+      videoThumbnail,
     } = await getVideoInfo(id);
 
-    if (uploadDate === undefined) {
-      const { videos } = await getVideoInfo(id);
+    if (videoUploadDate === undefined) {
+      const {
+        plTitle,
+        plOwner,
+        plVideoLength,
+        plThumbnail,
+      } = await getVideoInfo(id);
 
-      videoTtl.textContent = title;
-      videoOwn.textContent = owner;
-      let videoList = document.getElementById('lis');
+      videoTtl.textContent = plTitle;
+      videoOwn.textContent = `${plOwner} - ${plVideoLength} video found`;
+      thumbURL.src = plThumbnail;
 
-      videos.forEach((item) => {
-        let li = document.createElement('ul');
-        const content = `${item[0]}. ${item[1]} - <mark>${item[2]}</mark>`;
+      /*
+      Fetch to playlist events
 
-        li.innerHTML += content;
-        videoList.appendChild(li);
-      });
-
-      show(SectInfo);
-    } else {
-      videoOwn.textContent = `${owner} - ${uploadDate}`;
+      await fetch(`/playlist?id=${plVideoID}`);
+      */
 
       show(SectInfo, SectDown);
+    } else {
+      videoOwn.textContent = `${videoOwner} - ${videoUploadDate}`;
+      videoTtl.textContent = videoTitle;
+      thumbURL.src = videoThumbnail;
+
+      show(SectInfo, SectFrmt);
     }
-    videoTtl.textContent = title;
-    thumbURL.src = thumbnail;
   }
 });
 
-downBttn.addEventListener('click', () => {
+SectFrmt.addEventListener('click', () => show(SectDown));
+
+download.addEventListener('click', () => {
   try {
     try {
-      download({
-        id: getID(),
-        format: getFormats('format'),
-      });
-    } catch (err) {
-      console.error(err);
+      try {
+        downloadAV({
+          id: getID(),
+          format: getFormat('format'),
+        });
+      } catch {
+        downloadAV({
+          id: getVideoID(),
+          format: getFormat('format'),
+        });
+      }
+    } catch {
+      // For playlists
     }
-  } catch {
-    try {
-      download({
-        id: getVideoID(),
-        format: getFormats('format'),
-      });
-    } catch (err) {
-      console.error(err);
-    }
+  } catch (err) {
+    console.error(err);
   }
 });
