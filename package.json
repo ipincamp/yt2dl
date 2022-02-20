@@ -7,6 +7,7 @@
   "contributors": [
     "ipincamp",
     "aliazhar-id"
+    "andhra21231"
   ],
   "license": "GPL-3.0",
   "bugs": {
@@ -27,6 +28,7 @@
     "lint": "eslint --fix --ext .js .",
     "start": "node .",
     "test": "echo \"Tests have been done before being pushed to version control\" && exit 0"
+    "compile": "electron ."
   },
   "keywords": [
     "js",
@@ -55,6 +57,7 @@
     "eslint": "^8.9.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
-    "pm2": "^5.1.2"
+    "pm2": "^5.1.2",
+    "electron": "^17.0.1"
   }
 }
