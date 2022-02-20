@@ -1,6 +1,6 @@
 /**
  * @name yt2mp3
- * @version v1.0.3
+ * @version v1.0.4
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
@@ -9,6 +9,10 @@ const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const { Joi, validate } = require('express-validation');
 const { last } = require('lodash');
+
+function publish(str) {
+  return str.split('-').reverse().join('/');
+}
 
 module.exports = {
   name: '/api',
@@ -21,57 +25,52 @@ module.exports = {
     const { id } = req.query;
 
     try {
-      await ytdl.getInfo(id).then(({ videoDetails, formats }) => {
-        const {
-          title,
-          thumbnails,
-          ownerChannelName,
-          publishDate,
-        } = videoDetails;
-
-        const owner = ownerChannelName;
-        const thumbnail = last(thumbnails).url;
-        const videoFormats = formats;
-
-        function invertDate(str) {
-          return str.split('-').reverse().join('/');
-        }
-
-        const uploadDate = invertDate(publishDate);
-
-        res.json({
-          title,
-          owner,
-          uploadDate,
-          thumbnail,
-          videoFormats,
-        });
-      });
-    } catch {
-      await ytpl(id)
-        .then((details) => {
-          let {
-            author,
-            items,
+      await ytdl.getInfo(id)
+        .then(({ videoDetails, formats }) => {
+          const {
             title,
+            ownerChannelName,
+            publishDate,
             thumbnails,
-          } = details;
+          } = videoDetails;
 
-          const owner = author.name;
-          const thumbnail = last(thumbnails).url;
-          const videoList = items;
-          let videos = [];
-
-          items.forEach((v) => {
-            videos.push([v.index, v.title, v.shortUrl]);
-          });
+          const videoTitle = title;
+          const videoOwner = ownerChannelName;
+          const videoUploadDate = publish(publishDate);
+          const videoThumbnail = last(thumbnails).url;
+          const videoFormats = formats;
 
           res.json({
+            videoTitle,
+            videoOwner,
+            videoUploadDate,
+            videoThumbnail,
+            videoFormats,
+          });
+        });
+    } catch {
+      await ytpl(id)
+        .then((plDetails) => {
+          const {
             title,
-            owner,
-            thumbnail,
-            videos,
-            videoList,
+            author,
+            estimatedItemCount,
+            thumbnails,
+            items,
+          } = plDetails;
+
+          const plTitle = title;
+          const plOwner = author.name;
+          const plThumbnail = last(thumbnails).url;
+          const plVideoLength = estimatedItemCount;
+          const plVideoID = items.map((v) => v.id);
+
+          res.json({
+            plTitle,
+            plOwner,
+            plVideoLength,
+            plThumbnail,
+            plVideoID,
           });
         })
         .catch((err) => next(err));
