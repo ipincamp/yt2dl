@@ -147,7 +147,7 @@ section.info .infoleft img {
 /* ============================================================= */
 /* ||                       Download                             */
 /* ============================================================= */
-section.download .format {
+section.format .format {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -160,7 +160,7 @@ section.download .format {
   margin-bottom: 28px;
 }
 
-section.download .format input {
+section.format .format input {
   display: none;
 }
 
@@ -184,7 +184,7 @@ input:checked + .custom-radio-btn:hover {
   background-color: #22252a;
 }
 
-section.download label {
+section.format label {
   width: 80px;
 }
 
