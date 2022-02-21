@@ -24,11 +24,12 @@
     "npm": "8.5.0"
   },
   "scripts": {
-    "build-win": "",
     "dev": "pm2 start . --watch",
     "lint": "eslint --fix --ext .js .",
     "start": "node .",
-    "test": "echo \"Tests have been done before being pushed to version control\" && exit 0"
+    "test": "echo \"Tests have been done before being pushed to version control\" && exit 0",
+    "testelec": "electron .",
+    "elecbuildwin": ""
   },
   "keywords": [
     "js",
