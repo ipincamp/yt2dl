@@ -72,10 +72,7 @@ module.exports = {
        How to make a redirect when the above process is complete?
        While i use this :D
        */
-      setTimeout(() => {
-        res.writeHead(301, { Location: `/cvlist?id=${plID}` });
-        res.end();
-      }, 30000);
+      res.end();
     } catch (error) {
       return next(error);
     }
