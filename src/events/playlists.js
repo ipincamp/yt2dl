@@ -31,7 +31,9 @@ module.exports = {
     let dirID = `./src/playlists/${plID}`;
 
     if (!fs.existsSync(dirID)) {
-      fs.mkdirSync(dirID);
+      cp.execSync(`zip -r ${plTitle}.zip ./${plID}/*`, {
+        cwd: './src/playlists/',
+      });
     }
 
     try {
@@ -58,10 +60,10 @@ module.exports = {
         if (fs.existsSync(`./src/playlists/${plID}/${v.index} - ${v.title}.mp3`)) {
           console.warn(`${v.title} already exists!`);
           cp.execSync(`zip -r ${plTitle}.zip ./${plID}/*`, {
-            cwd: './src/playlists',
+            cwd: './src/playlists/',
           });
 
-          return res.download(`./src/playlists/${plTitle}.zip`);
+          res.download(`./src/playlists/${plTitle}.zip`);
         }
 
         audio.pipe(ffmpegProcess.stdio[4]).on('error', ffmpegStreamError);
