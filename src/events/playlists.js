@@ -5,7 +5,6 @@
  * @license GNU (General Public License v3.0)
  */
 
-const cp = require('child_process');
 const ffmpeg = require('ffmpeg-static');
 const fs = require('fs');
 const ytdl = require('ytdl-core');
@@ -26,14 +25,11 @@ module.exports = {
 
     const plVideos = (await ytpl(id)).items;
     const plID = (await ytpl(id)).id;
-    const plTitle = (await ytpl(id)).title;
 
     let dirID = `./src/playlists/${plID}`;
 
     if (!fs.existsSync(dirID)) {
-      cp.execSync(`zip -r ${plTitle}.zip ./${plID}/*`, {
-        cwd: './src/playlists/',
-      });
+      fs.mkdirSync(dirID);
     }
 
     try {
@@ -58,12 +54,7 @@ module.exports = {
         const ffmpegStreamError = (err) => console.error(err);
 
         if (fs.existsSync(`./src/playlists/${plID}/${v.index} - ${v.title}.mp3`)) {
-          console.warn(`${v.title} already exists!`);
-          cp.execSync(`zip -r ${plTitle}.zip ./${plID}/*`, {
-            cwd: './src/playlists/',
-          });
-
-          res.download(`./src/playlists/${plTitle}.zip`);
+          return console.warn(`${v.title} already exists!`);
         }
 
         audio.pipe(ffmpegProcess.stdio[4]).on('error', ffmpegStreamError);
@@ -77,6 +68,14 @@ module.exports = {
 
         res.on('end', () => ffmpegProcess.kill());
       });
+      /*
+       How to make a redirect when the above process is complete?
+       While i use this :D
+       */
+      setTimeout(() => {
+        res.writeHead(301, { Location: `/cvlist?id=${plID}` });
+        res.end();
+      }, 30000);
     } catch (error) {
       return next(error);
     }
