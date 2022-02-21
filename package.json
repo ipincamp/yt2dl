@@ -24,7 +24,7 @@
     "npm": "8.5.0"
   },
   "scripts": {
-    "compile": "electron .",
+    "build-win": "",
     "dev": "pm2 start . --watch",
     "lint": "eslint --fix --ext .js .",
     "start": "node .",
