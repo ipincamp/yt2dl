@@ -95,13 +95,7 @@ searchBT.addEventListener('click', async () => {
       videoOwn.textContent = `${plOwner} - ${plVideoLength} video found`;
       thumbURL.src = plThumbnail;
 
-      /*
-      Fetch to playlist events
-
-      await fetch(`/playlist?id=${plVideoID}`);
-      */
-
-      show(SectInfo, SectDown);
+      show(SectInfo);
     } else {
       videoOwn.textContent = `${videoOwner} - ${videoUploadDate}`;
       videoTtl.textContent = videoTitle;
@@ -143,13 +137,7 @@ searchBT.addEventListener('click', async () => {
       videoOwn.textContent = `${plOwner} - ${plVideoLength} video found`;
       thumbURL.src = plThumbnail;
 
-      /*
-      Fetch to playlist events
-
-      await fetch(`/playlist?id=${plVideoID}`);
-      */
-
-      show(SectInfo, SectDown);
+      show(SectInfo);
     } else {
       videoOwn.textContent = `${videoOwner} - ${videoUploadDate}`;
       videoTtl.textContent = videoTitle;
@@ -165,21 +153,17 @@ SectFrmt.addEventListener('click', () => show(SectDown));
 download.addEventListener('click', () => {
   try {
     try {
-      try {
-        downloadAV({
-          id: getID(),
-          format: getFormat('format'),
-        });
-      } catch {
-        downloadAV({
-          id: getVideoID(),
-          format: getFormat('format'),
-        });
-      }
+      downloadAV({
+        id: getID(),
+        format: getFormat('format'),
+      });
     } catch {
-      // For playlists
+      downloadAV({
+        id: getVideoID(),
+        format: getFormat('format'),
+      });
     }
   } catch (err) {
-    console.error(err);
+    return console.error(err);
   }
 });
