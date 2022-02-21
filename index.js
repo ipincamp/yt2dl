@@ -1,6 +1,6 @@
 /**
  * @name yt2mp3
- * @version v1.0.3
+ * @version v1.0.4
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
@@ -11,7 +11,7 @@ const { join } = require('path');
 const { fetchAPI } = require('./src/fetchAPI');
 
 const app = express();
-const port = process.env.PORT || Math.floor(Math.random() * (9999 - 8000 + 1)) + 8000;
+const port = process.env.PORT || Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
 app.use(express.static('public'));
 
 const eventFiles = fs.readdirSync(join(__dirname, './src/events'))
