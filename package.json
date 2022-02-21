@@ -1,12 +1,12 @@
 {
   "name": "yt2mp3",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "YouTube Video & Audio Downloader using NodeJS",
   "private": true,
   "author": "ipincamp <support@nur-arifin.my.id>",
   "contributors": [
     "ipincamp",
-    "aliazhar-id"
+    "aliazhar-id",
     "andhra21231"
   ],
   "license": "GPL-3.0",
@@ -24,11 +24,11 @@
     "npm": "8.5.0"
   },
   "scripts": {
+    "compile": "electron .",
     "dev": "pm2 start . --watch",
     "lint": "eslint --fix --ext .js .",
     "start": "node .",
     "test": "echo \"Tests have been done before being pushed to version control\" && exit 0"
-    "compile": "electron ."
   },
   "keywords": [
     "js",
