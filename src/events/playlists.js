@@ -6,86 +6,69 @@
  */
 
 const ffmpeg = require('ffmpeg-static');
-const sanitize = require('sanitize-filename');
+const fs = require('fs');
 const ytdl = require('ytdl-core');
-const { Joi, validate } = require('express-validation');
+const ytpl = require('ytpl');
 const { spawn } = require('child_process');
-const { forEach } = require('lodash');
+const { validate, Joi } = require('express-validation');
 
 module.exports = {
   name: '/playlist',
-  run(req, res, next) {
+  async run(req, res, next) {
     validate({
       query: Joi.object({
-        list: Joi.array().required(),
+        id: Joi.string().required(),
       }),
     });
 
-    const { list } = req.query;
+    const { id } = req.query;
 
-    list.forEach((id) => {
-      ytdl.getInfo(id)
-        .then(({ videoDetails }) => {
-          const { title } = videoDetails;
+    const plVideos = (await ytpl(id)).items;
 
-          let audio = ytdl(id, { quality: 'highestaudio' });
+    let dirID = `./src/playlists/${id}`;
 
-          const ffmpegProcess = spawn(ffmpeg, [
-            '-loglevel', 'error', '-',
-            '-i', 'pipe:3',
-            '-c:a', 'libmp3lame',
-            '-vn',
-            '-ar', '44100',
-            '-ac', '2',
-            '-b:a', '192k',
-            '-f', 'mp3',
-          ], {
-            stdio: [
-              'inherit', 'inherit', 'inherit',
-              /*
-              input, output, error
-              --------------------
-              pipe:3, pipe:4, pipe:5
-              */
-              'pipe', 'pipe', 'pipe',
-            ],
-          });
+    if (!fs.existsSync(dirID)) {
+      fs.mkdirSync(dirID);
+    }
 
-          ffmpegProcess.on('close', () => {
-            const ext = 'mp3';
-            const contentType = 'audio/mpeg';
-            const filename = `yt2mp3 - ${encodeURI(sanitize(title))}.${ext}`;
+    try {
+      plVideos.forEach((v) => {
+        const audio = ytdl(v.id, { quality: 'highestaudio' });
 
-            res.setHeader('Content-Type', contentType);
-            res.setHeader(
-              'Content-Disposition',
-              `attachment; filename=${filename}; filename*=utf-8''${filename}`,
-            );
-          });
+        const ffmpegProcess = spawn(ffmpeg, [
+          '-loglevel', '8', '-hide_banner',
+          '-progress', 'pipe:3',
+          '-i', 'pipe:4',
+          '-map', '0:a',
+          '-c:a', 'libmp3lame',
+          `./src/playlists/${id}/${v.index} - ${v.title}.mp3`,
+        ], {
+          windowsHide: true,
+          stdio: [
+            'inherit', 'inherit', 'inherit',
+            'pipe', 'pipe', 'pipe',
+          ],
+        });
 
-          const ffmpegStreamError = (err) => console.error(err);
-          forEach(audio, (stream) => {
-            const dest = ffmpegProcess.stdio[4];
-            stream.pipe(dest).on('error', ffmpegStreamError);
-          });
+        const ffmpegStreamError = (err) => console.error(err);
 
-          ffmpegProcess.stdio[4].pipe(res);
+        if (fs.existsSync(`./src/playlists/${id}/${v.index} - ${v.title}.mp3`)) {
+          return console.warn(`${v.title} already exists!`);
+        }
 
-          let ffmpegLogs = '';
-          ffmpegProcess.stdio[5].on('data', (chunk) => {
-            ffmpegLogs += chunk.toString();
-          });
+        audio.pipe(ffmpegProcess.stdio[4]).on('error', ffmpegStreamError);
 
-          ffmpegProcess.on('exit', (exitCode) => {
-            if (exitCode === 1) {
-              return console.error(ffmpegLogs);
-            }
-            res.end();
-          });
-          res.on('close', () => {
-            ffmpegProcess.kill();
-          });
-        }).catch((err) => next(err));
-    });
+        ffmpegProcess.on('exit', (exitCode, err) => {
+          if (exitCode === 1) {
+            console.error(err);
+          }
+          res.end();
+        });
+
+        res.on('end', () => ffmpegProcess.kill());
+      });
+    } catch (error) {
+      return next(error);
+    }
   },
 };
