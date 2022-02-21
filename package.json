@@ -51,6 +51,7 @@
     "node-fetch": "^2.6.7",
     "sanitize-filename": "^1.6.3",
     "ytdl-core": "^4.10.1",
+    "electron": "^17.0.1",
     "ytpl": "^2.2.3"
   },
   "devDependencies": {
@@ -58,6 +59,6 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "pm2": "^5.1.2",
-    "electron": "^17.0.1"
+    "electron-packager": "^15.4.0"
   }
 }
