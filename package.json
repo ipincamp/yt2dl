@@ -1,11 +1,10 @@
 {
   "name": "yt2mp3",
   "version": "1.0.4",
-  "description": "YouTube Video & Audio Downloader using NodeJS",
+  "description": "YouTube Audio & Video Downloader Using NodeJS",
   "private": true,
   "author": "ipincamp <support@nur-arifin.my.id>",
   "contributors": [
-    "ipincamp",
     "aliazhar-id",
     "andhra21231"
   ],
@@ -20,8 +19,8 @@
   },
   "main": "index.js",
   "engines": {
-    "node": "16.14.0",
-    "npm": "8.5.0"
+    "node": ">=16.0.0",
+    "npm": ">=8.3.0"
   },
   "scripts": {
     "compile": "electron .",
@@ -41,7 +40,9 @@
     "youtube-downloader",
     "yt-downloader",
     "yt2mp3",
-    "ytdl-nodejs"
+    "ytdl-nodejs",
+    "yt-converter",
+    "yt-mp3"
   ],
   "dependencies": {
     "express": "^4.17.3",
@@ -54,10 +55,10 @@
     "ytpl": "^2.2.3"
   },
   "devDependencies": {
+    "electron": "^17.0.1",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
-    "pm2": "^5.1.2",
-    "electron": "^17.0.1"
+    "pm2": "^5.2.0"
   }
 }
