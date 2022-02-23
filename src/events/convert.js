@@ -77,53 +77,37 @@ module.exports = {
          */
         const ffmpegInputs = {
           video: [
-            '-i',
-            `pipe:${pipes.video}`,
-            '-i',
-            `pipe:${pipes.audio}`,
-            '-map',
-            '0:v',
-            '-map',
-            '1:a',
-            '-c:v',
-            'h264',
-            '-c:a',
-            'libmp3lame',
-            '-crf',
-            '18',
-            '-preset',
-            'veryfast',
-            '-movflags',
-            'frag_keyframe+empty_moov',
-            '-f',
-            'mp4',
+            '-i', `pipe:${pipes.video}`,
+            '-i', `pipe:${pipes.audio}`,
+            '-map', '0:v',
+            '-map', '1:a',
+            '-c:v', 'copy',
+            '-c:a', 'libmp3lame',
+            '-crf', '18',
+            '-preset', 'veryfast',
+            '-movflags', 'frag_keyframe+empty_moov+faststart',
+            '-f', 'mp4',
           ],
           audio: [
-            '-i',
-            `pipe:${pipes.audio}`,
-            '-c:a',
-            'libmp3lame',
+            '-i', `pipe:${pipes.audio}`,
+            '-c:a', 'libmp3lame',
             '-vn',
-            '-ar',
-            '44100',
-            '-ac',
-            '2',
-            '-b:a',
-            '192k',
-            '-f',
-            'mp3',
+            '-ar', '44100',
+            '-ac', '2',
+            '-b:a', '192k',
+            '-f', 'mp3',
           ],
         };
 
         const ffmpegOptions = [
           ...ffmpegInputs[format],
-          '-loglevel',
-          'error',
-          '-',
+          '-loglevel', 'error', '-',
         ];
 
         const ffmpegProcess = spawn(ffmpegPath, ffmpegOptions, {
-          stdio: ['pipe', 'pipe', 'pipe', 'pipe', 'pipe'],
+          stdio: [
+            'pipe', 'pipe', 'pipe', 'pipe', 'pipe',
+          ],
         });
 
         const ffmpegStreamError = (err) => console.error(err);
