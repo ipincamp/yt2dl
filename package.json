@@ -23,8 +23,7 @@
     "npm": ">=8.3.0"
   },
   "scripts": {
-    "compile": "electron .",
-    "dev": "pm2 start . --watch",
+    "dev:start": "pm2 start . --watch",
     "lint": "eslint --fix --ext .js .",
     "start": "node .",
     "test": "echo \"Tests have been done before being pushed to version control\" && exit 0"
@@ -55,7 +54,6 @@
     "ytpl": "^2.2.3"
   },
   "devDependencies": {
-    "electron": "^17.0.1",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
