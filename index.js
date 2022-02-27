@@ -6,26 +6,20 @@
  */
 
 const express = require('express');
-const { join } = require('path');
-const { readdirSync } = require('fs');
 const { fetchAPI } = require('./src/fetchAPI');
 
 const app = express();
-const port = process.env.PORT || Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
+const port = process.env.PORT || 8000;
 const url = 'https://y2m.herokuapp.com/';
 
-app.use(express.static('public'));
+app.use(express.static('./src/public'));
 
 setInterval(() => {
   fetchAPI(url);
 }, 299000);
 
-const eventFiles = readdirSync(join(__dirname, './src/events'))
-  .filter((x) => x.endsWith('.js'));
-for (const file of eventFiles) {
-  const event = require(join(__dirname, './src/events', `${file}`));
-
-  app.get(event.name, (...args) => event.run(...args));
-}
+require('./src/events/root')(app);
+require('./src/events/api')(app);
+require('./src/events/convert')(app);
 
 app.listen(port, () => console.info(`Listening server at port ${port}`));
