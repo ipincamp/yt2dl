@@ -14,66 +14,72 @@ function publish(str) {
   return str.split('-').reverse().join('/');
 }
 
-module.exports = {
-  name: '/api',
-  async run(req, res, next) {
+/**
+ *
+ * @param {import('express').Application} app
+ */
+module.exports = function (app) {
+  app.get(
+    '/api',
     validate({
       query: Joi.object({
         id: Joi.string().required(),
       }),
-    });
-    const { id } = req.query;
+    }),
+    async (req, res, next) => {
+      const { id } = req.query;
 
-    try {
-      await ytdl.getInfo(id)
-        .then(({ videoDetails, formats }) => {
-          const {
-            title,
-            ownerChannelName,
-            publishDate,
-            thumbnails,
-          } = videoDetails;
+      try {
+        await ytdl.getInfo(id)
+          .then(({ videoDetails, formats }) => {
+            const {
+              title,
+              ownerChannelName,
+              publishDate,
+              thumbnails,
+            } = videoDetails;
 
-          const videoTitle = title;
-          const videoOwner = ownerChannelName;
-          const videoUploadDate = publish(publishDate);
-          const videoThumbnail = last(thumbnails).url;
-          const videoFormats = formats;
+            const videoTitle = title;
+            const videoOwner = ownerChannelName;
+            const videoUploadDate = publish(publishDate);
+            const videoThumbnail = last(thumbnails).url;
+            const videoFormats = formats;
 
-          res.json({
-            videoTitle,
-            videoOwner,
-            videoUploadDate,
-            videoThumbnail,
-            videoFormats,
+            res.json({
+              videoTitle,
+              videoOwner,
+              videoUploadDate,
+              videoThumbnail,
+              videoFormats,
+            });
           });
-        });
-    } catch {
-      await ytpl(id)
-        .then((plDetails) => {
-          const {
-            title,
-            author,
-            estimatedItemCount,
-            thumbnails,
-            items,
-          } = plDetails;
+      } catch {
+        await ytpl(id)
+          .then((plDetails) => {
+            const {
+              title,
+              author,
+              estimatedItemCount,
+              thumbnails,
+              items,
+            } = plDetails;
 
-          const plTitle = title;
-          const plOwner = author.name;
-          const plThumbnail = last(thumbnails).url;
-          const plVideoLength = estimatedItemCount;
-          const plVideoID = items.map((v) => v.id);
+            const plTitle = title;
+            const plOwner = author.name;
+            const plThumbnail = last(thumbnails).url;
+            const plVideoLength = estimatedItemCount;
+            const plVideoID = items.map((v) => v.id);
 
-          res.json({
-            plTitle,
-            plOwner,
-            plVideoLength,
-            plThumbnail,
-            plVideoID,
-          });
-        })
-        .catch((err) => next(err));
-    }
-  },
+            res.json({
+              plTitle,
+              plOwner,
+              plVideoLength,
+              plThumbnail,
+              plVideoID,
+            });
+          })
+          .catch((err) => next(err));
+      }
+    },
+  );
 };
