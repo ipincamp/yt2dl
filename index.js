@@ -6,17 +6,12 @@
  */
 
 const express = require('express');
-const { fetchAPI } = require('./src/fetchAPI');
 
 const app = express();
 const port = process.env.PORT || 8000;
 const url = 'https://y2m.herokuapp.com/';
 
 app.use(express.static('./src/public'));
-
-setInterval(() => {
-  fetchAPI(url);
-}, 299000);
 
 require('./src/events/root')(app);
 require('./src/events/api')(app);
