@@ -15,6 +15,9 @@ const errorURL = document.querySelector('.eru');
 const SectInfo = document.querySelector('section.info');
 const SectFrmt = document.querySelector('section.format');
 const SectDown = document.querySelector('section.download');
+const CprgYear = document.querySelector('.year');
+
+CprgYear.innerHTML = new Date().getFullYear();
 
 const getID = () => {
   const url = inputURL.value;
