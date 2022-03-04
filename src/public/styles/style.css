@@ -30,10 +30,9 @@ body {
 }
 
 .content-container {
-  background-color: #2a2d31;
-  border-radius: 20px;
+  background-color: #35393f;
+  border-radius: 7px;
   padding: 25px;
-  box-shadow: 0px 0px 8px rgb(180, 175, 175);
 }
 
 /* ============================================================= */
@@ -68,16 +67,15 @@ section.search input {
   width: 70%;
   height: 2.6em;
   line-height: 2.6em;
-  border-radius: 6px;
+  border-radius: 1.3em;
   border: none;
-  background-color: #1e2125;
+  background-color: #eee;
   padding: 0 0.9em;
   outline: none;
-  color: #eee;
+  color: rgb(49, 49, 49);
   font-size: auto;
   text-align: center;
   margin-bottom: 20px;
-  box-shadow: 0px 0px 5px 0.5px #ccc;
   font-weight: bold;
 }
 
@@ -90,17 +88,19 @@ section.search button {
   width: 115px;
   font-weight: bold;
   margin: auto;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: #0099ff;
   border: none;
   color: #eee;
   font-size: 100%;
   display: block;
-  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
+  box-shadow: 0.4px 0.4px 4px 0.5px rgb(15, 15, 15);
 }
 
 section.search button:hover {
   background-color: #0084d8;
+  color: #bbb;
+  box-shadow: 0.4px 0.4px 4px 0.5px rgb(7, 7, 7);
 }
 
 section.search button:active {
@@ -109,6 +109,10 @@ section.search button:active {
 
 section.search div {
   color: yellowgreen;
+}
+
+.eru {
+  padding-bottom: 20px;
 }
 
 /* ============================================================= */
@@ -141,13 +145,12 @@ section.info .infoleft img {
   width: 100%;
   max-width: 250px;
   border-radius: 10px;
-  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
 }
 
 /* ============================================================= */
-/* ||                       Download                             */
+/* ||                       Format                               */
 /* ============================================================= */
-section.format .format {
+section.format-container .format {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -160,7 +163,7 @@ section.format .format {
   margin-bottom: 28px;
 }
 
-section.format .format input {
+section.format-container .format input {
   display: none;
 }
 
@@ -175,8 +178,7 @@ input:checked + .custom-radio-btn:hover {
 .custom-radio-btn {
   cursor: pointer;
   background-color: #1e2125;
-  border-radius: 4px;
-  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
+  border-radius: 25px;
   padding: 0.5em 0.8em;
 }
 
@@ -184,19 +186,22 @@ input:checked + .custom-radio-btn:hover {
   background-color: #22252a;
 }
 
-section.format label {
+section.format-container label {
   width: 80px;
 }
 
+/* ============================================================= */
+/* ||                       Download                             */
+/* ============================================================= */
+
 section.download .dwn {
   background-color: #7ed214;
-  border-radius: 4px;
+  border-radius: 9px;
   height: 45px;
   width: 115px;
   padding: 0.5em 0.8em;
   border: none;
   font-weight: bold;
-  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
   width: 100%;
   max-width: 115px;
   min-width: 85px;
@@ -241,6 +246,6 @@ footer a:hover {
   color: #bbb;
 }
 
-section.d-none {
-  display: none;
+.d-none {
+  display: none !important;
 }

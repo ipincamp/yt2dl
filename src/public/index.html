@@ -30,8 +30,8 @@
     <div class="content-container">
       <section class="search">
         <input type="url" class="url" value="" placeholder="YouTube video link or playlist">
-        <div class="eru" id="eru"></div>
-        <button class="cvb">Search</button>
+        <div class="eru d-none">Please enter a valid link!</div>
+        <button class="cvb"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
       </section>
       <section class="info d-none">
         <div class="infoleft">
@@ -42,10 +42,10 @@
           <div class="own"></div>
         </div>
       </section>
-      <section class="format d-none">
+      <section class="format-container d-none">
         <div class="format">
           <label for="audio">
-            <input type="radio" name="format" id="audio" value="audio" checked>
+            <input type="radio" name="format" id="audio" value="audio">
             <div class="custom-radio-btn">Audio</div>
           </label>
           <label for="video">
@@ -55,7 +55,7 @@
         </div>
       </section>
       <section class="download d-none">
-        <button class="dwn">Download</button>
+        <button class="dwn"><i class="fa fa-download" aria-hidden="true"></i> Download</button>
       </section>
     </div>
   </div>
