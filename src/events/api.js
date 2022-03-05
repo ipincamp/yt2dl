@@ -39,17 +39,17 @@ module.exports = function (app) {
               thumbnails,
             } = videoDetails;
 
-            const videoTitle = title;
-            const videoOwner = ownerChannelName;
+            const VorPTitle = title;
+            const owner = ownerChannelName;
             const videoUploadDate = publish(publishDate);
-            const videoThumbnail = last(thumbnails).url;
+            const thumbnail = last(thumbnails).url;
             const videoFormats = formats;
 
             res.json({
-              videoTitle,
-              videoOwner,
+              VorPTitle,
+              owner,
               videoUploadDate,
-              videoThumbnail,
+              thumbnail,
               videoFormats,
             });
           });
@@ -64,17 +64,17 @@ module.exports = function (app) {
               items,
             } = plDetails;
 
-            const plTitle = title;
-            const plOwner = author.name;
-            const plThumbnail = last(thumbnails).url;
-            const plVideoLength = estimatedItemCount;
+            const VorPTitle = title;
+            const owner = author.name;
+            const thumbnail = last(thumbnails).url;
+            const plVideoLength = `${estimatedItemCount} video found`;
             const plVideoID = items.map((v) => v.id);
 
             res.json({
-              plTitle,
-              plOwner,
+              VorPTitle,
+              owner,
               plVideoLength,
-              plThumbnail,
+              thumbnail,
               plVideoID,
             });
           })

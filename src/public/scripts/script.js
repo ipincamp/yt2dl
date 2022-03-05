@@ -13,31 +13,27 @@ const videoOwn = document.querySelector('.own');
 const downBTTN = document.querySelector('.dwn');
 const errorURL = document.querySelector('.eru');
 const SectInfo = document.querySelector('section.info');
-const SectFrmt = document.querySelector('section.format');
+const SectFrmt = document.querySelector('section.format-container');
 const SectDown = document.querySelector('section.download');
 const CprgYear = document.querySelector('.year');
 
 CprgYear.innerHTML = new Date().getFullYear();
 
-const getID = () => {
-  const url = inputURL.value;
-  return url;
-};
-
 const getVideoID = () => {
   const url = inputURL.value;
+  let id;
 
-  try {
-    if (url.includes('youtu.be')) {
-      return url.slice(-11);
-    }
-    if (url.includes('shorts')) {
-      return new URLSearchParams(url.split('?')[0]);
-    }
-  } catch {
-    const searchParams = new URLSearchParams(url.split('?')[1]);
-    return searchParams.get('v');
+  if (url.includes('youtu.be')) {
+    id = url.slice(-11);
+  } else if (url.includes('shorts')) {
+    id = new URLSearchParams(url.split('?')[0]);
+  } else if (url.length === 11 || url.length === 34 || url.includes('?list=')) {
+    id = url;
+  } else if (url.includes('youtube.com')) {
+    id = new URLSearchParams(url.split('?')[1]).get('v');
   }
+
+  return id;
 };
 
 const getVideoInfo = async (id) => {
@@ -63,91 +59,49 @@ const download = ({ id, format }) => {
 
 const show = (...args) => args.forEach((x) => x.classList.remove('d-none'));
 
+const notfEru = () => {
+  show(errorURL);
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 1500);
+};
+
 searchBT.addEventListener('click', async () => {
+  const id = getVideoID();
+  if (!id) {
+    notfEru();
+    return;
+  }
+
+  let videoInfo;
   try {
-    const id = getID();
-
-    if ((id === null) || (id === undefined)) {
-      errorURL.innerHTML = 'Please enter a valid link!';
-      errorURL.style.cssText += 'padding-bottom: 20px';
-
-      setTimeout(() => {
-        document.getElementById('eru').hidden = true;
-        window.location.reload();
-      }, 1500);
-
+    videoInfo = await getVideoInfo(id);
+  } finally {
+    if (!videoInfo) {
+      notfEru();
       return;
     }
+  }
 
-    const {
-      videoTitle,
-      videoOwner,
-      videoUploadDate,
-      videoThumbnail,
-    } = await getVideoInfo(id);
+  const {
+    VorPTitle,
+    owner,
+    thumbnail,
+    videoUploadDate,
+    plVideoLength,
+  } = videoInfo;
 
-    if (videoUploadDate === undefined) {
-      const {
-        plTitle,
-        plOwner,
-        plVideoLength,
-        plThumbnail,
-      } = await getVideoInfo(id);
+  videoTtl.textContent = VorPTitle;
+  videoOwn.textContent = `${owner} - ${videoUploadDate || plVideoLength}`;
+  thumbURL.src = thumbnail;
 
-      videoTtl.textContent = plTitle;
-      videoOwn.textContent = `${plOwner} - ${plVideoLength} video found`;
-      thumbURL.src = plThumbnail;
-
-      show(SectInfo);
-    } else {
-      videoOwn.textContent = `${videoOwner} - ${videoUploadDate}`;
-      videoTtl.textContent = videoTitle;
-      thumbURL.src = videoThumbnail;
-
-      show(SectInfo, SectFrmt);
+  {
+    const listSectionToShow = [SectInfo, SectFrmt];
+    if (plVideoLength) {
+      listSectionToShow.pop();
     }
-  } catch {
-    const id = getVideoID();
-
-    if ((id === null) || (id === undefined)) {
-      errorURL.innerHTML = 'Please enter a valid link!';
-      errorURL.style.cssText += 'padding-bottom: 20px';
-
-      setTimeout(() => {
-        document.getElementById('eru').hidden = true;
-        window.location.reload();
-      }, 1500);
-
-      return;
-    }
-
-    const {
-      videoTitle,
-      videoOwner,
-      videoUploadDate,
-      videoThumbnail,
-    } = await getVideoInfo(id);
-
-    if (videoUploadDate === undefined) {
-      const {
-        plTitle,
-        plOwner,
-        plVideoLength,
-        plThumbnail,
-      } = await getVideoInfo(id);
-
-      videoTtl.textContent = plTitle;
-      videoOwn.textContent = `${plOwner} - ${plVideoLength} video found`;
-      thumbURL.src = plThumbnail;
-
-      show(SectInfo);
-    } else {
-      videoOwn.textContent = `${videoOwner} - ${videoUploadDate}`;
-      videoTtl.textContent = videoTitle;
-      thumbURL.src = videoThumbnail;
-
-      show(SectInfo, SectFrmt);
-    }
+    show(...listSectionToShow);
   }
 });
 
@@ -155,17 +109,10 @@ SectFrmt.addEventListener('click', () => show(SectDown));
 
 downBTTN.addEventListener('click', () => {
   try {
-    try {
-      download({
-        id: getID(),
-        format: getFormat('format'),
-      });
-    } catch {
-      download({
-        id: getVideoID(),
-        format: getFormat('format'),
-      });
-    }
+    download({
+      id: getVideoID(),
+      format: getFormat('format'),
+    });
   } catch (err) {
     return console.error(err);
   }
