@@ -117,3 +117,9 @@ downBTTN.addEventListener('click', () => {
     return console.error(err);
   }
 });
+
+inputURL.addEventListener('keyup', (event) => {
+  if (event.keyCode === 13) {
+    searchBT.click();
+  }
+});
