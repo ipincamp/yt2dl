@@ -21,6 +21,9 @@
         "no-console": "off",
         "no-plusplus": "off",
         "no-restricted-syntax": "off",
-        "prefer-const": "off"
+        "prefer-const": "off",
+        "no-continue": "off",
+        "guard-for-in": "off",
+        "no-unsafe-finally": "off"
     }
 }
