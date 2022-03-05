@@ -9,7 +9,6 @@ const express = require('express');
 
 const app = express();
 const port = process.env.PORT || 8000;
-const url = 'https://y2m.herokuapp.com/';
 
 app.use(express.static('./src/public'));
 
