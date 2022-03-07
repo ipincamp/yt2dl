@@ -23,10 +23,19 @@
     "npm": ">=8.3.0"
   },
   "scripts": {
-    "dev:start": "pm2 start . --watch",
     "lint": "eslint --fix --ext .js .",
     "start": "node .",
-    "test": "echo \"Tests have been done before being pushed to version control\" && exit 0"
+    "test": "pm2 start . --watch"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-validation": "^3.0.8",
+    "ffmpeg-static": "^5.0.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.7",
+    "sanitize-filename": "^1.6.3",
+    "ytdl-core": "^4.11.0",
+    "ytpl": "^2.3.0"
   },
   "keywords": [
     "javascript",
@@ -53,16 +62,6 @@
     "ytdownloader",
     "ytplaylist"
   ],
-  "dependencies": {
-    "express": "^4.17.3",
-    "express-validation": "^3.0.8",
-    "ffmpeg-static": "^5.0.0",
-    "lodash": "^4.17.21",
-    "node-fetch": "^2.6.7",
-    "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.11.0",
-    "ytpl": "^2.3.0"
-  },
   "devDependencies": {
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
