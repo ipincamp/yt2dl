@@ -61,7 +61,7 @@
     "node-fetch": "^2.6.7",
     "sanitize-filename": "^1.6.3",
     "ytdl-core": "^4.11.0",
-    "ytpl": "^2.2.3"
+    "ytpl": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^8.10.0",
