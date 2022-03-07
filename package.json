@@ -60,7 +60,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.7",
     "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.10.1",
+    "ytdl-core": "^4.11.0",
     "ytpl": "^2.2.3"
   },
   "devDependencies": {
