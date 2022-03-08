@@ -23,12 +23,14 @@ const getVideoID = () => {
   const url = inputURL.value;
   let id;
 
-  if (url.includes('youtu.be')) {
-    id = url.slice(-11);
+  if (url.length === 11 || url.length === 34) {
+    id = url;
+  } else if (url.includes('playlist')) {
+    id = new URLSearchParams(url.split('?')[1]).get('list');
   } else if (url.includes('shorts')) {
     id = new URLSearchParams(url.split('?')[0]);
-  } else if (url.length === 11 || url.length === 34 || url.includes('?list=')) {
-    id = url;
+  } else if (url.includes('youtu.be')) {
+    id = url.slice(-11);
   } else if (url.includes('youtube.com')) {
     id = new URLSearchParams(url.split('?')[1]).get('v');
   }
@@ -43,17 +45,16 @@ const getVideoInfo = async (id) => {
 
 const getFormat = (name) => document.querySelector(`[name="${name}"]:checked`).value;
 
-const getDownloadAV = ({ id, format }) => {
-  let url = `/convert?id=${id}&format=${format}`;
+const getDownloadAV = ({ id, fr }) => {
+  let url = `/get?id=${id}&fr=${fr}`;
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = true;
   return a;
 };
 
-const download = ({ id, format }) => {
-  const a = getDownloadAV({ id, format });
+const download = ({ id, fr }) => {
+  const a = getDownloadAV({ id, fr });
   a.click();
 };
 
@@ -111,7 +112,7 @@ downBTTN.addEventListener('click', () => {
   try {
     download({
       id: getVideoID(),
-      format: getFormat('format'),
+      fr: getFormat('format'),
     });
   } catch (err) {
     return console.error(err);
