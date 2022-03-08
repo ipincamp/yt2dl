@@ -14,6 +14,6 @@ app.use(express.static('./src/public'));
 
 require('./src/events/root')(app);
 require('./src/events/api')(app);
-require('./src/events/convert')(app);
+require('./src/events/get')(app);
 
 app.listen(port, () => console.info(`Listening server at port ${port}`));
