@@ -18,15 +18,15 @@ const { spawn } = require('child_process');
  */
 module.exports = function (app) {
   app.get(
-    '/convert',
+    '/get',
     validate({
       query: Joi.object({
         id: Joi.string().required(),
-        format: Joi.valid('video', 'audio'),
+        fr: Joi.valid('video', 'audio'),
       }),
     }),
     (req, res, next) => {
-      const { id, format } = req.query;
+      const { id, fr } = req.query;
 
       ytdl.getInfo(id)
         .then(({ videoDetails }) => {
@@ -34,7 +34,7 @@ module.exports = function (app) {
 
           const streams = {};
 
-          if (format === 'video') {
+          if (fr === 'video') {
           /*
           If you want to contribute to making the video quality selection,
           please go to pull request
@@ -43,7 +43,7 @@ module.exports = function (app) {
             streams.audio = ytdl(id, { quality: 'highestaudio' });
           }
 
-          if (format === 'audio') {
+          if (fr === 'audio') {
             streams.audio = ytdl(id, { quality: 'highestaudio' });
           }
 
@@ -57,8 +57,8 @@ module.exports = function (app) {
             audio: 'audio/mpeg',
           };
 
-          const ext = exts[format];
-          const contentType = contentTypes[format];
+          const ext = exts[fr];
+          const contentType = contentTypes[fr];
           const filename = `yt2mp3 - ${encodeURI(sanitize(title))}.${ext}`;
 
           res.setHeader('Content-Type', contentType);
@@ -103,7 +103,7 @@ module.exports = function (app) {
           };
 
           const ffmpegOptions = [
-            ...ffmpegInputs[format],
+            ...ffmpegInputs[fr],
             '-loglevel', 'error', '-',
           ];
 
@@ -115,8 +115,8 @@ module.exports = function (app) {
 
           const ffmpegStreamError = (err) => console.error(err);
 
-          forEach(streams, (stream, formatS) => {
-            const dest = ffmpegProcess.stdio[pipes[formatS]];
+          forEach(streams, (stream, format) => {
+            const dest = ffmpegProcess.stdio[pipes[format]];
             stream.pipe(dest).on('error', ffmpegStreamError);
           });
 
