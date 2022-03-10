@@ -4,10 +4,6 @@
   "description": "YouTube Audio & Video Downloader Using NodeJS",
   "private": true,
   "author": "ipincamp <support@nur-arifin.my.id>",
-  "contributors": [
-    "aliazhar-id",
-    "andhra21231"
-  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/ipincamp/yt2mp3/issues"
