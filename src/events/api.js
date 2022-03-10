@@ -5,10 +5,14 @@
  * @license GNU (General Public License v3.0)
  */
 
-const ytdl = require('ytdl-core');
-const ytpl = require('ytpl');
-const { Joi, validate } = require('express-validation');
-const { last } = require('lodash');
+import vali from 'express-validation';
+import ytdl from 'ytdl-core';
+import loda from 'lodash';
+import ytpl from 'ytpl';
+
+const { getInfo } = ytdl;
+const { last } = loda;
+const { Joi, validate } = vali;
 
 function publish(str) {
   return str.split('-').reverse().join('/');
@@ -18,19 +22,25 @@ function publish(str) {
  *
  * @param {import('express').Application} app
  */
-module.exports = function (app) {
-  app.get(
+export const funcAPI = (apps) => {
+  apps.get(
     '/api',
     validate({
       query: Joi.object({
         id: Joi.string().required(),
       }),
     }),
+    /**
+     *
+     * @param {import('express').Request} req
+     * @param {import('express').Response} res
+     * @param {import('express').NextFunction} next
+     */
     async (req, res, next) => {
       const { id } = req.query;
 
       try {
-        await ytdl.getInfo(id)
+        await getInfo(id)
           .then(({ videoDetails, formats }) => {
             const {
               title,

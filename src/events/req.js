@@ -6,9 +6,9 @@
  */
 
 /**
- *
- * @param {import('express').Application} app
- */
-module.exports = function (app) {
-  app.get('/', (req, res) => res.sendStatus(200));
+  *
+  * @param {import('express').Application} app
+  */
+export const funcREQ = (apps) => {
+  apps.get('/', (req, res) => res.sendStatus(200));
 };

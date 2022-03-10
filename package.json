@@ -27,6 +27,7 @@
     "start": "node .",
     "test": "pm2 start . --watch"
   },
+  "type": "module",
   "dependencies": {
     "express": "^4.17.3",
     "express-validation": "^3.0.8",

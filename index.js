@@ -5,15 +5,18 @@
  * @license GNU (General Public License v3.0)
  */
 
-const express = require('express');
+import express from 'express';
+import { funcREQ } from './src/events/req.js';
+import { funcAPI } from './src/events/api.js';
+import { funcGET } from './src/events/get.js';
 
-const app = express();
+const apps = express();
 const port = process.env.PORT || 8000;
 
-app.use(express.static('./src/public'));
+apps.use(express.static('./src/public'));
 
-require('./src/events/root')(app);
-require('./src/events/api')(app);
-require('./src/events/get')(app);
+funcREQ(apps);
+funcAPI(apps);
+funcGET(apps);
 
-app.listen(port, () => console.info(`Listening server at port ${port}`));
+apps.listen(port, () => console.info(`Listening server at port ${port}`));

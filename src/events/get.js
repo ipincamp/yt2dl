@@ -5,19 +5,24 @@
  * @license GNU (General Public License v3.0)
  */
 
-const ffmpegPath = require('ffmpeg-static');
-const sanitize = require('sanitize-filename');
-const ytdl = require('ytdl-core');
-const { Joi, validate } = require('express-validation');
-const { forEach } = require('lodash');
-const { spawn } = require('child_process');
+import cpsp from 'child_process';
+import loda from 'lodash';
+import mpeg from 'ffmpeg-static';
+import sani from 'sanitize-filename';
+import vali from 'express-validation';
+import ytdl from 'ytdl-core';
+
+const { forEach } = loda;
+const { getInfo } = ytdl;
+const { Joi, validate } = vali;
+const { spawn } = cpsp;
 
 /**
  *
  * @param {import('express').Application} app
  */
-module.exports = function (app) {
-  app.get(
+export const funcGET = (apps) => {
+  apps.get(
     '/get',
     validate({
       query: Joi.object({
@@ -25,10 +30,16 @@ module.exports = function (app) {
         fr: Joi.valid('video', 'audio'),
       }),
     }),
-    (req, res, next) => {
+    /**
+     *
+     * @param {import('express').Request} req
+     * @param {import('express').Response} res
+     * @param {import('express').NextFunction} next
+     */
+    async (req, res, next) => {
       const { id, fr } = req.query;
 
-      ytdl.getInfo(id)
+      await getInfo(id)
         .then(({ videoDetails }) => {
           const { title } = videoDetails;
 
@@ -59,7 +70,7 @@ module.exports = function (app) {
 
           const ext = exts[fr];
           const contentType = contentTypes[fr];
-          const filename = `yt2mp3 - ${encodeURI(sanitize(title))}.${ext}`;
+          const filename = `yt2mp3 - ${encodeURI(sani(title))}.${ext}`;
 
           res.setHeader('Content-Type', contentType);
           res.setHeader(
@@ -104,14 +115,17 @@ module.exports = function (app) {
 
           const ffmpegOptions = [
             ...ffmpegInputs[fr],
-            '-loglevel', 'error', '-',
+            '-loglevel', 'error',
+            '-',
           ];
 
-          const ffmpegProcess = spawn(ffmpegPath, ffmpegOptions, {
-            stdio: [
-              'pipe', 'pipe', 'pipe', 'pipe', 'pipe',
-            ],
-          });
+          const ffmpegProcess = spawn(
+            mpeg,
+            ffmpegOptions,
+            {
+              stdio: ['pipe', 'pipe', 'pipe', 'pipe', 'pipe'],
+            },
+          );
 
           const ffmpegStreamError = (err) => console.error(err);
 
@@ -123,9 +137,12 @@ module.exports = function (app) {
           ffmpegProcess.stdio[pipes.out].pipe(res);
 
           let ffmpegLogs = '';
-          ffmpegProcess.stdio[pipes.err].on('data', (chunk) => {
-            ffmpegLogs += chunk.toString();
-          });
+          ffmpegProcess.stdio[pipes.err].on(
+            'data',
+            (chunk) => {
+              ffmpegLogs += chunk.toString();
+            },
+          );
 
           ffmpegProcess.on('exit', (exitCode) => {
             if (exitCode === 1) {
