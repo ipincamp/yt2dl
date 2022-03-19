@@ -5,23 +5,19 @@
  * @license GNU (General Public License v3.0)
  */
 
+import loda from 'lodash';
 import vali from 'express-validation';
 import ytdl from 'ytdl-core';
-import loda from 'lodash';
 import ytpl from 'ytpl';
 
 const { getInfo } = ytdl;
-const { last } = loda;
 const { Joi, validate } = vali;
+const { last } = loda;
 
 function publish(str) {
   return str.split('-').reverse().join('/');
 }
 
-/**
- *
- * @param {import('express').Application} app
- */
 export const funcAPI = (apps) => {
   apps.get(
     '/api',
@@ -30,12 +26,6 @@ export const funcAPI = (apps) => {
         id: Joi.string().required(),
       }),
     }),
-    /**
-     *
-     * @param {import('express').Request} req
-     * @param {import('express').Response} res
-     * @param {import('express').NextFunction} next
-     */
     async (req, res, next) => {
       const { id } = req.query;
 

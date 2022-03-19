@@ -17,10 +17,6 @@ const { getInfo } = ytdl;
 const { Joi, validate } = vali;
 const { spawn } = cpsp;
 
-/**
- *
- * @param {import('express').Application} app
- */
 export const funcGET = (apps) => {
   apps.get(
     '/get',
@@ -30,12 +26,6 @@ export const funcGET = (apps) => {
         fr: Joi.valid('video', 'audio'),
       }),
     }),
-    /**
-     *
-     * @param {import('express').Request} req
-     * @param {import('express').Response} res
-     * @param {import('express').NextFunction} next
-     */
     async (req, res, next) => {
       const { id, fr } = req.query;
 

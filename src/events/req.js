@@ -5,10 +5,6 @@
  * @license GNU (General Public License v3.0)
  */
 
-/**
-  *
-  * @param {import('express').Application} app
-  */
 export const funcREQ = (apps) => {
   apps.get('/', (req, res) => res.sendStatus(200));
 };
