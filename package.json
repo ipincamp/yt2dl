@@ -1,17 +1,17 @@
 {
-  "name": "yt2mp3",
-  "version": "1.0.4",
+  "name": "yt2dl",
+  "version": "1.0.5",
   "description": "YouTube Audio & Video Downloader Using NodeJS",
   "private": true,
   "author": "ipincamp <support@nur-arifin.my.id>",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/ipincamp/yt2mp3/issues"
+    "url": "https://github.com/ipincamp/yt2dl/issues"
   },
-  "homepage": "https://github.com/ipincamp/yt2mp3#readme",
+  "homepage": "https://github.com/ipincampyt2dl#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ipincamp/yt2mp3.git"
+    "url": "git+https://github.com/ipincamp/yt2dl.git"
   },
   "main": "index.js",
   "engines": {
@@ -21,17 +21,17 @@
   "scripts": {
     "lint": "eslint --fix --ext .js .",
     "start": "node index.js",
-    "test": "echo \"Test has been done before being pushed to version control\" && exit 0"
+    "test": "nodemon index.js"
   },
   "type": "module",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.3",
-    "express-validation": "^4.0.0",
+    "express-validation": "^4.0.1",
     "ffmpeg-static": "^5.0.0",
     "lodash": "^4.17.21",
     "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.11.0",
-    "ytpl": "^2.3.0"
+    "ytdl-core": "^4.11.0"
   },
   "keywords": [
     "javascript",
@@ -59,8 +59,9 @@
     "ytplaylist"
   ],
   "devDependencies": {
-    "eslint": "^8.12.0",
+    "eslint": "^8.13.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4"
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.15"
   }
 }
