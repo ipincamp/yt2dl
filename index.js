@@ -53,6 +53,7 @@ const ID = (url) => {
 };
 
 app.use(cors());
+app.use(expres.static('public'));
 app.get('/', (req, res) => res.sendStatus(200));
 /**
  * Parameter example
@@ -82,13 +83,28 @@ app.get(
             .uniq()
             .orderBy(null, 'desc')
             .value();
+          function durations() {
+            let h = Math.floor(parseInt(videoDetails.lengthSeconds) / 3600);
+            let m = Math.floor((parseInt(videoDetails.lengthSeconds) / 60) % 60);
+            let s = parseInt(videoDetails.lengthSeconds) % 60;
+            if (h === 0 || h < 10) {
+              h = `0${h}`;
+            }
+            if (m === 0 || m < 10) {
+              m = `0${m}`;
+            }
+            if (s === 0 || s < 10) {
+              s = `0${s}`;
+            }
+            return `${h}:${m}:${s}`;
+          }
           res.status(200).json({
             title: videoDetails.title,
             thumbnail: last(videoDetails.thumbnails).url,
-            duration: parseInt(videoDetails.lengthSeconds),
+            durations: durations(),
             channel: videoDetails.ownerChannelName,
             resolutions,
-            audiobitrate: bitrate,
+            bitrate,
           });
         })
         .catch((error) => next(error.message));
