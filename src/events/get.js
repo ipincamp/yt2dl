@@ -4,15 +4,12 @@
  * @author ipincamp <support@nur-arifin.my.id>
  * @license GNU (General Public License v3.0)
  */
-
 import cpsp from 'child_process';
-import loda from 'lodash';
 import mpeg from 'ffmpeg-static';
 import sani from 'sanitize-filename';
 import vali from 'express-validation';
 import ytdl from 'ytdl-core';
 
-const { forEach } = loda;
 const { getInfo } = ytdl;
 const { Joi, validate } = vali;
 const { spawn } = cpsp;
@@ -33,20 +30,19 @@ export const funcGET = (apps) => {
         .then(({ videoDetails }) => {
           const { title } = videoDetails;
 
-          const streams = {};
+          const audio = ytdl(id, { quality: 'highestaudio' });
+          const streams = [audio];
 
           if (fr === 'video') {
           /*
           If you want to contribute to making the video quality selection,
           please go to pull request
           */
-            streams.video = ytdl(id, { quality: 'highest' });
-            streams.audio = ytdl(id, { quality: 'highestaudio' });
+            const video = ytdl(id, { quality: 'highest' });
+            streams.unshift(video);
           }
 
-          if (fr === 'audio') {
-            streams.audio = ytdl(id, { quality: 'highestaudio' });
-          }
+
 
           const exts = {
             video: 'mp4',
@@ -118,9 +114,13 @@ export const funcGET = (apps) => {
           );
 
           const ffmpegStreamError = (err) => console.error(err);
+          
+          streams.forEach((stream, i, a) => {
+            if (a.length === 1) {
+              i += 1; 
+            }
 
-          forEach(streams, (stream, format) => {
-            const dest = ffmpegProcess.stdio[pipes[format]];
+            const dest = ffmpegProcess.stdio[i+3];
             stream.pipe(dest).on('error', ffmpegStreamError);
           });
 
