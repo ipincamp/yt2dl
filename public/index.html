@@ -4,31 +4,82 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="YouTube Audio & Video Downloader. Fast, Easy & No ADS!">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="
+    javascript,
+    js,
+    mp3downloader,
+    node-ytdl,
+    node-ytdl-core,
+    nodejs,
+    y2mate,
+    youtube-dl,
+    youtube-downloader,
+    youtube-music,
+    youtubedl,
+    youtubeplaylist,
+    yt-converter,
+    yt-downloader,
+    yt-mp3,
+    yt-music,
+    yt2mp3,
+    ytdl,
+    ytdl-nodejs,
+    ytdl-core,
+    ytdownload,
+    ytdownloader,
+    ytplaylist">
+  <meta property="og:title" content="YouTube Downloader">
+  <meta property="og:description" content="YouTube Audio & Video Downloader. Fast, Easy & No ADS!">
+  <meta property="og:url" content="https://yt2dl.glitch.me">
+  <meta property="og:image" content="favicon.ico">
+  <meta property="og:image:alt" content="YT2MP3">
+
   <title>YouTube Downloader</title>
+
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="index.css">
-  <link rel="stylesheet" href="https://unpkg.com/destyle.css@3.0.0/destyle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="index.js" defer></script>
 </head>
 
 <body>
-  <div>
-    <input class="input-url" value="https://www.youtube.com/watch?v=dPK6SbYCpxQ">
-    <button class="search-button">Search</button>
+  <header>
+    <h1>YT2DL - Audio & Video</h1>
+  </header>
+  <div class="main-container">
+    <div class="content-container">
+      <section class="search">
+        <div>
+          <input class="input-url" placeholder="YouTube URL" value="" required>
+          <div class="error-url"></div>
+          <button class="search-button"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+        </div>
+      </section>
+      <section class="info d-none">
+        <div class="infoleft">
+          <img class="video-thumbnail" src="">
+        </div>
+        <div class="inforight">
+          <div class="video-title"></div>
+          <div class="video-info"></div>
+        </div>
+      </section>
+      <section class="format-container d-none">
+        <div class="format-type"></div>
+        <div class="video-resolutions d-none"></div>
+        <div class="audio-bitrate"></div>
+      </section>
+      <section class="download d-none">
+        <button class="download-button"><i class="fa fa-download" aria-hidden="true"></i> Download</button>
+      </section>
+    </div>
   </div>
-  <div>
-    <img class="video-thumbnail" src="">
-    <div class="video-title"></div>
-    <div class="video-info"></div>
-  </div>
-  <div>
-    <div class="format-type"></div>
-    <div class="video-resolutions"></div>
-    <div class="audio-bitrate"></div>
-  </div>
-  <div>
-    <button class="download-button d-none">Download</button>
-  </div>
+  <footer>
+    <p id="copyright">&copy <span class="copyright-year"></span> YT2DL. All rights reserved.</p>
+    <a href="https://github.com/ipincamp/yt2dl"><i class="fa fa-github" style="font-size:36px"></i></a>
+  </footer>
 </body>
 
 </html>
