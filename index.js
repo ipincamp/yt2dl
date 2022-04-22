@@ -15,7 +15,7 @@ import sanitize from 'sanitize-filename';
 import ytdlcore from 'ytdl-core';
 
 const app = expres();
-const { chain, forEach, last } = lodash;
+const { forEach } = lodash;
 const { Joi, validate } = valids;
 const { spawn } = cp;
 
@@ -55,37 +55,40 @@ const ID = (url) => {
 app.use(cors());
 app.use(expres.static('public'));
 app.get('/', (req, res) => res.sendStatus(200));
-/**
- * Parameter example
- * - /api?url=12345678901
- * - /api?url=https://youtu.be/12345678901
- * - /api?url=https://www.youtube.com/watch?v=12345678901
- * - /api?url=https://www.youtube.com/shorts/12345678901
- */
 app.get(
   '/api',
   validate({
     query: Joi.object({ url: Joi.string().required() }),
   }),
-  (req, res, next) => {
+  (req, res) => {
     const { url } = req.query;
-    if (ID(url) === null) return res.sendStatus(400);
+    if (ID(url) === null || url === undefined) {
+      return res.json({
+        status: false,
+        error: '❌ Input url or ID must contain domain from YouTube!',
+      });
+    }
     if (ytdlcore.validateID(ID(url)) === true) {
       ytdlcore
         .getInfo(ID(url))
         .then(({ formats, videoDetails }) => {
           const resolutions = formats
-            .filter((f) => f.hasAudio === false && f.hasVideo === true && f.videoCodec?.startsWith('avc1'))
-            .map(({ fps, height }) => `${height}p${fps}`);
-          const bitrate = chain(formats)
-            .filter('hasAudio')
-            .map('audioBitrate')
-            .uniq()
-            .orderBy(null, 'desc')
-            .value();
+            .filter(
+              (f) => f.hasAudio === false
+                && f.hasVideo === true
+                && f.videoCodec?.startsWith('avc1'),
+            )
+            .map((f) => `${f.height}p${f.fps}`)
+            .sort((a, b) => b - a);
+          const bitrate = formats
+            .filter((f) => f.hasAudio === true)
+            .map((f) => f.audioBitrate)
+            .sort((a, b) => b - a);
           function durations() {
             let h = Math.floor(parseInt(videoDetails.lengthSeconds) / 3600);
-            let m = Math.floor((parseInt(videoDetails.lengthSeconds) / 60) % 60);
+            let m = Math.floor(
+              (parseInt(videoDetails.lengthSeconds) / 60) % 60,
+            );
             let s = parseInt(videoDetails.lengthSeconds) % 60;
             if (h === 0 || h < 10) {
               h = `0${h}`;
@@ -100,24 +103,25 @@ app.get(
           }
           res.status(200).json({
             title: videoDetails.title,
-            thumbnail: last(videoDetails.thumbnails).url,
+            thumbnail: videoDetails.thumbnails.pop().url,
             durations: durations(),
             channel: videoDetails.ownerChannelName,
             resolutions,
             bitrate,
           });
         })
-        .catch((error) => next(error.message));
+        .catch((error) => res.json({
+          status: false,
+          error: `❌ ${error.message}`,
+        }));
     } else {
-      return res.sendStatus(404);
+      return res.json({
+        status: false,
+        error: '❌ Video not found.',
+      });
     }
   },
 );
-/**
- * Parameter examples
- * - Audio: /get?url=12345678901&typ=aud&bit=128
- * - Video: /get?url=12345678901&typ=vid&qty=1080p60&bit=128
- */
 app.get(
   '/get',
   validate({
@@ -134,41 +138,62 @@ app.get(
       }),
     }),
   }),
-  (req, res, next) => {
+  (req, res) => {
     const { url, typ, qty } = req.query;
-    if (ID(url) === null) return res.sendStatus(400);
+    if (ID(url) === null) {
+      return res.json({
+        status: false,
+        error: '❌ Input url or ID must contain domain from YouTube!',
+      });
+    }
     if (ytdlcore.validateID(ID(url)) === true) {
       ytdlcore
         .getInfo(ID(url))
         .then(({ formats, videoDetails }) => {
           const { title } = videoDetails;
-          let audioItag;
-          let sampleBit;
-          let videoItag;
-          let ffmpegLog = '';
-          let queryFill = `${qty}_${req.query.bit}k`;
           const streams = {};
-          if (typ === 'aud') {
+
+          let mark = `${req.query.bit}k`;
+
+          const audio = () => {
+            let itag = 0;
+            let bit = 0;
             formats.forEach((f) => {
               if (f.audioBitrate === parseInt(req.query.bit)) {
-                audioItag = f.itag;
-                sampleBit = f.audioSampleRate;
+                itag = f.itag;
+                bit = f.audioSampleRate;
               }
             });
-            if (audioItag === undefined) return res.sendStatus(400);
-            streams.aud = ytdlcore(ID(url), { quality: audioItag });
+            return { itag, bit };
+          };
+
+          if (typ === 'aud') {
+            if (audio().itag === 0) {
+              return res.json({
+                status: false,
+                error: '❌ Audio bitrate not found.',
+              });
+            }
+            streams.aud = ytdlcore(ID(url), { quality: audio().itag });
           }
+
           if (typ === 'vid') {
+            mark += `_${qty}`;
             const r = qty?.split('p');
-            videoItag = chain(formats)
-              .filter(({ fps, height }) => fps === parseInt(r[1]) && height === parseInt(r[0]))
-              .map('itag')
-              .orderBy(null, 'desc')
-              .head()
-              .value();
-            if ((videoItag || audioItag) === undefined) return res.sendStatus(400);
-            streams.aud = ytdlcore(ID(url), { quality: audioItag });
-            streams.vid = ytdlcore(ID(url), { quality: videoItag });
+            let itag = 0;
+            formats.forEach((f) => {
+              if (f.fps === parseInt(r[1]) && f.height === parseInt(r[0])) {
+                itag = f.itag;
+              }
+            });
+            if ((audio().itag || itag) === 0) {
+              return res.json({
+                status: false,
+                error: '❌ Video resolution or audio bitrate not found.',
+              });
+            }
+            streams.aud = ytdlcore(ID(url), { quality: audio().itag });
+            streams.vid = ytdlcore(ID(url), { quality: itag });
           }
           const exts = {
             aud: 'mp3',
@@ -178,14 +203,13 @@ app.get(
             aud: 'audio/mpeg',
             vid: 'video/mp4',
           };
-          if (typ === 'aud') {
-            queryFill = `${req.query.bit}k`;
-          }
-          const f = `${encodeURI(sanitize(title))}-[${queryFill}].${exts[typ]}`;
+          const filename = `${encodeURI(sanitize(title))}-[${mark}].${
+            exts[typ]
+          }`;
           res.setHeader('Content-Type', contentTypes[typ]);
           res.setHeader(
             'Content-Disposition',
-            `attachment; filename=${f}; filename*=utf-8''${f}`,
+            `attachment; filename=${filename}; filename*=utf-8''${filename}`,
           );
           const pipes = {
             out: 1,
@@ -198,7 +222,7 @@ app.get(
               '-i', `pipe:${pipes.aud}`,
               '-c:a', 'libmp3lame',
               '-vn',
-              '-ar', `${sampleBit}`,
+              '-ar', `${audio().bit}`,
               '-ac', '2',
               '-b:a', `${req.query.bit}k`,
               '-f', 'mp3',
@@ -223,26 +247,39 @@ app.get(
           const ffmpegProcess = spawn(ffmpeg, ffmpegOptions, {
             stdio: ['pipe', 'pipe', 'pipe', 'pipe', 'pipe'],
           });
+          let ffmpegLog = '';
           forEach(streams, (stream, format) => {
             const dest = ffmpegProcess.stdio[pipes[format]];
-            stream.pipe(dest).on('error', (e) => next(e.message));
+            stream.pipe(dest).on('error', (e) => res.json({
+              status: false,
+              error: `❌ ${e.message}`,
+            }));
           });
           ffmpegProcess.stdio[pipes.out].pipe(res);
           ffmpegProcess.stdio[pipes.err].on(
             'data',
-            (chunk) => ffmpegLog += chunk.toString(),
+            (chunk) => (ffmpegLog += chunk.toString()),
           );
           ffmpegProcess.on('exit', (exitCode) => {
             if (exitCode === 1) {
-              next(ffmpegLog);
+              return res.json({
+                status: false,
+                error: `❌ ${ffmpegLog}`,
+              });
             }
+            ffmpegProcess.kill();
             res.end();
           });
-          res.on('close', () => ffmpegProcess.kill());
         })
-        .catch((error) => next(error.message));
+        .catch((error) => res.json({
+          status: false,
+          error: `❌ ${error.message}`,
+        }));
     } else {
-      return res.sendStatus(404);
+      return res.json({
+        status: false,
+        error: '❌ Video not found.',
+      });
     }
   },
 );
