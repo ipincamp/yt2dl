@@ -27,7 +27,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.3",
-    "express-validation": "^4.0.1",
+    "express-validation": "^4.1.0",
     "ffmpeg-static": "^5.0.0",
     "lodash": "^4.17.21",
     "sanitize-filename": "^1.6.3",
