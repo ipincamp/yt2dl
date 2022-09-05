@@ -31,7 +31,7 @@
     "ffmpeg-static": "^5.1.0",
     "lodash": "^4.17.21",
     "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.11.1"
+    "ytdl-core": "^4.11.2"
   },
   "keywords": [
     "javascript",
