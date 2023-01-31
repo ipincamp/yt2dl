@@ -25,7 +25,7 @@
     "check-types": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "prepare": "husky install",
-    "start": "npx tsc -w",
+    "start": "node index.js",
     "test": "npx nodemon"
   },
   "husky": {

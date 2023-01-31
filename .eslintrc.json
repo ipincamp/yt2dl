@@ -5,7 +5,8 @@
     },
     "extends": "standard-with-typescript",
     "ignorePatterns": [
-        "**dist/*",
+        "**/dist/*",
+        "**/index.js",
         "**/node_modules/*",
         "**/public/*",
         "**/tsconfig.json"
