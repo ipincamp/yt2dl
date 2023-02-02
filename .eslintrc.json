@@ -22,5 +22,13 @@
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {}
+    "rules": {
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/key-spacing": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/prefer-ts-expect-error": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/space-before-function-paren": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off"
+    }
 }
