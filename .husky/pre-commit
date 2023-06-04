@@ -1,29 +1,33 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo 'Styling, testing and building your project before committing!'
+echo "Styling, Testing & Building your project before commiting!";
+
 # Check Prettier
-npm run check-format ||
+npm run check:format ||
 {
-    echo 'Pretty Check Failed. Run "npm run format", add changes and try to commit again!';
-}
-# Check ESLint
-npm run check-lint ||
-{
-    echo 'ESLint Check Failed. Make the required changes listed above, add changes, and try to commit again!';
-    false;
-}
-# Check TS Config
-npm run check-types ||
-{
-    echo 'Type Check Failed. Make the necessary changes above, add changes, and try to commit again!';
-    false;
-}
-# Check Build
-npm run build ||
-{
-    echo 'Build process failed. Check the error above';
+    echo 'Prettier Check Failed! Run "npm run format", add changes & try to commit again.';
     false;
 }
 
-echo 'Success committed and ready to push!'
+# Check ESLint
+npm run check:eslint ||
+{
+    echo 'ESLint Check Failed! Make the required changes listed above, add changes & try to commit again.';
+    false;
+}
+
+# Check tsconfig
+npm run check:types ||
+{
+    echo 'Failed Type Check! Make the changes require abov, add changes & try to commit again.';
+    false;
+}
+
+npm run build ||
+{
+    echo 'Your Build Failed! See the error above.';
+    false;
+}
+
+echo "Success Commit!"

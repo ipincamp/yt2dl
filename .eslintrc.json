@@ -6,7 +6,6 @@
     "extends": "standard-with-typescript",
     "ignorePatterns": [
         "**/dist/*",
-        "**/index.js",
         "**/node_modules/*",
         "**/public/*",
         "**/tsconfig.json"
@@ -14,21 +13,12 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
-        "project": [
-            "**/tsconfig.json"
-        ],
+        "project": ["**/tsconfig.json"],
         "sourceType": "module"
     },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/key-spacing": "off",
-        "@typescript-eslint/no-misused-promises": "off",
-        "@typescript-eslint/prefer-ts-expect-error": "off",
-        "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/space-before-function-paren": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
     }
 }
