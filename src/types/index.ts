@@ -1,10 +1,11 @@
-export interface Cdn {
-  mid: string
-  exp: number
-  txt: string
+interface Resolutions {
+  id: number
+  quality: number
 }
 
-export type Format = Array<{
-  label: string
-  token: string
-}>
+interface StreamObject {
+  mp4: any
+  mp3: any
+}
+
+export type { Resolutions, StreamObject }
