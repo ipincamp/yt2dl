@@ -1,24 +1,16 @@
 {
     "env": {
+        "commonjs": true,
         "es2021": true,
         "node": true
     },
-    "extends": "standard-with-typescript",
-    "ignorePatterns": [
-        "**/dist/*",
-        "**/node_modules/*",
-        "**/public/*",
-        "**/tsconfig.json"
-    ],
-    "parser": "@typescript-eslint/parser",
+    "extends": "airbnb-base",
     "parserOptions": {
-        "ecmaVersion": "latest",
-        "project": ["**/tsconfig.json"],
-        "sourceType": "module"
+        "ecmaVersion": "latest"
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
     "rules": {
+        "comma-dangle": "off",
+        "no-continue": "off",
+        "no-restricted-syntax": "off"
     }
 }

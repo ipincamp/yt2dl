@@ -2,113 +2,78 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="YouTube Audio & Video Downloader. Fast, Easy & No ADS!">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="
-    javascript,
-    js,
-    mp3downloader,
-    node-ytdl,
-    node-ytdl-core,
-    nodejs,
-    y2mate,
-    youtube-dl,
-    youtube-downloader,
-    youtube-music,
-    youtubedl,
-    youtubeplaylist,
-    yt-converter,
-    yt-downloader,
-    yt-mp3,
-    yt-music,
-    yt2mp3,
-    ytdl,
-    ytdl-nodejs,
-    ytdl-core,
-    ytdownload,
-    ytdownloader,
-    ytplaylist">
-  <meta property="og:title" content="YouTube Downloader">
-  <meta property="og:description" content="YouTube Audio & Video Downloader. Fast, Easy & No ADS!">
-  <meta property="og:url" content="https://yt2dl.glitch.me">
-  <meta property="og:image" content="favicon.ico">
-  <meta property="og:image:alt" content="YT2MP3">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>YouTube Downloader</title>
+    <title>YT2DL - YouTube Downloader</title>
 
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="index.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="index.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
 <body>
-  <header>
-    <h1>YT2DL - Audio & Video</h1>
-  </header>
-  <div class="main-container">
-    <div class="new-container">
-      <!-- API -->
-      <form action="/api" method="post">
-        <h2 style="color: whitesmoke;">Form API</h2>
-        <input type="text" name="id" min="11" max="11" placeholder="Paste just video Id only!">
-        <input type="submit" value="Search">
-      </form>
-      <!-- API -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">YT2DL</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Version History
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="./v1-0-0/">v1.0.0</a></li>
+                        <li><a class="dropdown-item" href="./v1-0-1/">v1.0.1</a></li>
+                        <li><a class="dropdown-item" href="./v1-0-2/">v1.0.2</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">v1.0.8 (current)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-      <!-- STREAM -->
-      <form action="/stream" method="post">
-        <h2 style="color: whitesmoke;">Form Download</h2>
-        <input placeholder="Video ID" type="text" name="id"> <br>
-        <input placeholder="Video Title" type="text" name="title"> <br>
-        <label style="color: whitesmoke;">Format
-          <select name="format">
-            <option value="mp3">MP3</option>
-            <option value="mp4">MP4</option>
-          </select>
-        </label>
-        <br>
-        <input placeholder="Audio Quality" type="number" name="audio"> <br>
-        <input placeholder="Video Quality" type="number" name="video"> <br>
-        <input type="submit" value="Stream Now!">
-      </form>
-      <!-- STREAM -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 mx-auto">
+                <div class="card card-body mt-4">
+                    <h4 class="card-title">API v1</h4>
+                    <form action="/api/v1" method="post">
+                        <input type="url" name="url" class="form-control mb-2"
+                            placeholder="Enter YouTube video url here" required />
+                        <button id="btn" type="submit" class="btn btn-success">
+                            Search
+                        </button>
+                    </form>
+                </div>
+
+                <br />
+
+                <div class="card card-body mt-4">
+                    <h4 class="card-title">API v2</h4>
+                    <form action="/api/v2" method="post">
+                        <input type="url" name="url" class="form-control mb-2"
+                            placeholder="Enter YouTube video url here" required />
+                        <button id="btn" type="submit" class="btn btn-success">
+                            Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--
-    <div class="content-container">
-      <section class="search">
-        <div>
-          <input class="input-url" placeholder="YouTube URL" value="" required>
-          <div class="error-url"></div>
-          <button class="search-button"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-        </div>
-      </section>
-      <section class="info d-none">
-        <div class="infoleft">
-          <img class="video-thumbnail" src="">
-        </div>
-        <div class="inforight">
-          <div class="video-title"></div>
-          <div class="video-info"></div>
-        </div>
-      </section>
-      <section class="format-container d-none">
-        <div class="format-type"></div>
-        <div class="video-resolutions d-none"></div>
-        <div class="audio-bitrate"></div>
-      </section>
-      <section class="download d-none">
-        <button class="download-button"><i class="fa fa-download" aria-hidden="true"></i> Download</button>
-      </section>
-    </div>
-    -->
-  </div>
-  <footer>
-    <p id="copyright">&copy <span class="copyright-year"></span> YT2DL. All rights reserved.</p>
-    <a href="https://github.com/ipincamp/yt2dl"><i class="fa fa-github" style="font-size:36px"></i></a>
-  </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

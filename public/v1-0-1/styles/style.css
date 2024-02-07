@@ -2,7 +2,6 @@
 /* ||                       General                              */
 /* ============================================================= */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400");
-
 :root {
   /*font-family*/
   --Nunito: "Nunito", sans-serif, cursive;
@@ -31,38 +30,10 @@ body {
 }
 
 .content-container {
-  background-color: #35393f;
-  border-radius: 7px;
+  background-color: #2a2d31;
+  border-radius: 20px;
   padding: 25px;
-}
-
-/* ============================================================= */
-/* ||                     Responsive                             */
-/* ============================================================= */
-@media screen and (max-width: 600px) {
-  .main-container {
-    padding: 100px 5px;
-  }
-
-  .content-container {
-    padding: 20px 10px;
-  }
-
-  section.search input {
-    min-width: 98%;
-  }
-
-  section.search button {
-    height: 2em;
-    width: 90px;
-  }
-
-  section.info .inforight {
-    text-align: left;
-    padding-top: 10px;
-    font-size: 18px;
-    max-width: 98%;
-  }
+  box-shadow: 0px 0px 8px rgb(180, 175, 175);
 }
 
 /* ============================================================= */
@@ -97,15 +68,16 @@ section.search input {
   width: 70%;
   height: 2.6em;
   line-height: 2.6em;
-  border-radius: 1.3em;
+  border-radius: 6px;
   border: none;
-  background-color: #eee;
+  background-color: #1e2125;
   padding: 0 0.9em;
   outline: none;
-  color: rgb(49, 49, 49);
+  color: #eee;
   font-size: auto;
   text-align: center;
   margin-bottom: 20px;
+  box-shadow: 0px 0px 5px 0.5px #ccc;
   font-weight: bold;
 }
 
@@ -118,19 +90,17 @@ section.search button {
   width: 115px;
   font-weight: bold;
   margin: auto;
-  border-radius: 6px;
+  border-radius: 4px;
   background-color: #0099ff;
   border: none;
   color: #eee;
   font-size: 100%;
   display: block;
-  box-shadow: 0.4px 0.4px 4px 0.5px rgb(15, 15, 15);
+  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
 }
 
 section.search button:hover {
   background-color: #0084d8;
-  color: #bbb;
-  box-shadow: 0.4px 0.4px 4px 0.5px rgb(7, 7, 7);
 }
 
 section.search button:active {
@@ -138,11 +108,7 @@ section.search button:active {
 }
 
 section.search div {
-  color: rgb(210, 241, 148);
-}
-
-.error-url {
-  padding-bottom: 20px;
+  color: yellowgreen;
 }
 
 /* ============================================================= */
@@ -166,7 +132,7 @@ section.info .inforight {
   max-width: 60%;
 }
 
-section.info .inforight .video-title {
+section.info .inforight .ttl {
   margin-bottom: 2rem;
   word-wrap: break-word;
 }
@@ -175,12 +141,13 @@ section.info .infoleft img {
   width: 100%;
   max-width: 250px;
   border-radius: 10px;
+  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
 }
 
 /* ============================================================= */
-/* ||                       Format                               */
+/* ||                       Download                             */
 /* ============================================================= */
-section.format-container .format-type {
+section.download .format {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -193,56 +160,23 @@ section.format-container .format-type {
   margin-bottom: 28px;
 }
 
-section.format-container .format-type input {
+section.download .format input {
   display: none;
 }
 
-section.format-container .video-resolutions {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: auto;
-  color: #eee;
-  user-select: none;
-  margin-bottom: 28px;
-}
-
-section.format-container .video-resolutions input {
-  display: none;
-}
-
-section.format-container .audio-bitrate {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin: auto;
-  color: #eee;
-  user-select: none;
-  margin-bottom: 28px;
-}
-
-section.format-container .audio-bitrate input {
-  display: none;
-}
-
-input:checked+.custom-radio-btn {
+input:checked + .custom-radio-btn {
   background-color: #0099ff;
 }
 
-input:checked+.custom-radio-btn:hover {
+input:checked + .custom-radio-btn:hover {
   background-color: #0084d8;
 }
 
 .custom-radio-btn {
   cursor: pointer;
   background-color: #1e2125;
-  border-radius: 25px;
+  border-radius: 4px;
+  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
   padding: 0.5em 0.8em;
 }
 
@@ -250,51 +184,29 @@ input:checked+.custom-radio-btn:hover {
   background-color: #22252a;
 }
 
-input:checked+.audiobitrate {
-  background-color: #bdaa06;
-}
-
-input:checked+.audiobitrate:hover {
-  background-color: #d1ac08;
-}
-
-.audiobitrate {
-  cursor: pointer;
-  background-color: #1e2125;
-  border-radius: 25px;
-  padding: 0.5em 0.8em;
-}
-
-.audiobitrate:hover {
-  background-color: #22252a;
-}
-
-section.format-container label {
+section.download label {
   width: 80px;
 }
 
-/* ============================================================= */
-/* ||                       Download                             */
-/* ============================================================= */
-
-section.download .download-button {
+section.download .dwn {
   background-color: #7ed214;
-  border-radius: 9px;
+  border-radius: 4px;
   height: 45px;
   width: 115px;
   padding: 0.5em 0.8em;
   border: none;
   font-weight: bold;
+  box-shadow: 0.1px 0.1px 3px 0.5px #ddd;
   width: 100%;
   max-width: 115px;
   min-width: 85px;
 }
 
-section.download .download-button:hover {
+section.download .dwn:hover {
   background-color: #6ab114;
 }
 
-section.download .download-button:active {
+section.download .dwn:active {
   background-color: #5e9c12;
 }
 
@@ -329,6 +241,6 @@ footer a:hover {
   color: #bbb;
 }
 
-.d-none {
-  display: none !important;
+section.d-none {
+  display: none;
 }
