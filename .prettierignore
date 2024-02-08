@@ -1,9 +1,0 @@
-node_modules
-public
-.env
-.eslintrc.json
-.prettierrc
-LICENSE
-nodemon.json
-package.json
-yarn.lock

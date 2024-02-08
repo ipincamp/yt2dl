@@ -103,3 +103,28 @@ dist
 
 # TernJS port file
 .tern-port
+
+# From next
+# dependencies
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# next.js
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+next-env.d.ts
