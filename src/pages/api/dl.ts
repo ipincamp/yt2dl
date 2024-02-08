@@ -2,12 +2,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Joi from "joi";
 import axios from "axios";
 import sanitize from "sanitize-filename";
+import { decrypt } from "@/utils/crypto";
 import resJson from "@/utils/resJson";
 import config from "@/utils/config";
-import { decrypt } from "@/utils/crypto";
 import handleCors from "@/utils/cors";
 
-function validation(input: any) {
+function dlValidation(input: any) {
   const schema = Joi.object<{ t: string }>({
     t: Joi.string()
       .required()
@@ -63,7 +63,7 @@ export default async function handler(
   await handleCors(_req, res);
   try {
     if (_req.method && _req.method === "GET") {
-      const { error, value } = validation(_req.query);
+      const { error, value } = dlValidation(_req.query);
 
       if (error) {
         resJson(400, error.details[0].message.replace(/"/g, "'"), [], res);
@@ -94,14 +94,14 @@ export default async function handler(
       }
 
       if (apiVersion === 2) {
-        const data = await fetchApi(field);
+        // const data = await fetchApi(field);
 
-        if (data.c_status !== "CONVERTED" && data.mess.length > 0) {
-          resJson(503, "please try again", [], res);
-          return;
-        }
+        // if (data.c_status !== "CONVERTED" && data.mess.length > 0) {
+        //   resJson(503, "please try again", [], res);
+        //   return;
+        // }
 
-        stream(data.dlink, contentType, filename, res);
+        // stream(data.dlink, contentType, filename, res);
         return;
       }
 

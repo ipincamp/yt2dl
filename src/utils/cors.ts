@@ -1,9 +1,10 @@
-import Cors from "cors";
 import type { NextApiRequest, NextApiResponse } from "next";
+import Cors from "cors";
 
 const cors = Cors({
   origin: "*",
   methods: ["GET", "POST"],
+  allowedHeaders: "*",
 });
 
 export default function handleCors(_req: NextApiRequest, res: NextApiResponse) {

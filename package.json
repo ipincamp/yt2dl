@@ -14,8 +14,8 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": ">=20.11.0",
-    "npm": ">=10.2.4",
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3",
     "yarn": ">=1.22.21"
   },
   "dependencies": {

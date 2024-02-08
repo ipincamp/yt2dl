@@ -66,7 +66,7 @@ export default async function handler(
           const token = encrypt(
             JSON.stringify({
               v: 2,
-              t: `${data.title} [${q.split(" ")[0]}]`,
+              t: `${data.title} [${quality.split(" ")[0]}]`,
               u: `vid=${data.vid}&k=${encodeURIComponent(k)}`,
             })
           );
