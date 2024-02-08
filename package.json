@@ -19,11 +19,18 @@
     "yarn": ">=1.22.21"
   },
   "dependencies": {
+    "axios": "^1.6.7",
+    "cors": "^2.8.5",
+    "joi": "^17.12.1",
     "next": "14.1.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sanitize-filename": "^1.6.3",
+    "swr": "^2.2.4",
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
