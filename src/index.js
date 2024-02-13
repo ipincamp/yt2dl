@@ -18,6 +18,7 @@ const app = express();
 /** body-parser */
 app.use(json());
 app.use(urlencoded({ extended: false }));
+app.use(express.static('public'));
 
 /** cors */
 app.use(cors());

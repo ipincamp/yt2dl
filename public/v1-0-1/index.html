@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Downloader</title>
+  <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./styles/responsive.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>YT2MP3</h1>
+  </header>
+  <div class="main-container">
+    <div class="content-container">
+      <section class="search">
+        <input type="url" class="url" value="" placeholder="Paste Youtube link here!">
+        <!-- Handle empty input -->
+        <div class="eru" id="eru"></div>
+        <button class="cvb">Search</button>
+      </section>
+      <section class="info d-none">
+        <div class="infoleft">
+          <img src="" alt="" class="tmb">
+        </div>
+        <div class="inforight">
+          <div class="ttl"></div>
+          <div class="own"></div>
+        </div>
+      </section>
+      <section class="download d-none">
+        <div class="format">
+          <label for="audio">
+            <input type="radio" name="format" id="audio" value="audio" checked>
+            <div class="custom-radio-btn">Audio</div>
+          </label>
+          <label for="video">
+            <input type="radio" id="video" name="format" value="video">
+            <div class="custom-radio-btn">Video</div>
+          </label>
+        </div>
+        <button class="dwn">Download</button>
+      </section>
+    </div>
+  </div>
+  <footer>
+    <p>&copy 2022 YT2MP3. All Rights Reserved.</p>
+    <a href="https://github.com/ipincamp/yt2mp3"><i class="fa fa-github" style="font-size:36px"></i></a>
+  </footer>
+  <script src="./scripts/script.js" defer></script>
+</body>
+
+</html>
