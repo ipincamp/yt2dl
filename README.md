@@ -57,7 +57,18 @@ yarn lint:fix
 
 # Type check
 yarn type-check
+
+# Run all validations (lint, format check, type check)
+yarn validate
 ```
+
+## Git Hooks
+
+The project uses [Husky](https://typicode.github.io/husky/) to enforce code quality:
+
+- **pre-push**: Runs linting, format checking, type checking, and build before pushing to ensure code quality
+
+All code pushed to the repository is automatically validated and built.
 
 ## Production
 
@@ -149,23 +160,31 @@ Two configurations provided:
 
 ## Scripts Reference
 
-| Command             | Description                                    |
-| ------------------- | ---------------------------------------------- |
-| `yarn dev`          | Run in development mode with hot reload        |
-| `yarn dev:pm2`      | Run development server with PM2                |
-| `yarn build`        | Compile TypeScript (includes pre-build checks) |
-| `yarn start`        | Run compiled code                              |
-| `yarn start:pm2`    | Run with PM2 process manager                   |
-| `yarn stop:pm2`     | Stop all PM2 processes                         |
-| `yarn restart:pm2`  | Restart all PM2 processes                      |
-| `yarn logs:pm2`     | View PM2 logs                                  |
-| `yarn monit:pm2`    | Monitor PM2 processes                          |
-| `yarn clean`        | Remove dist folder                             |
-| `yarn format`       | Format code with Prettier                      |
-| `yarn format:check` | Check code formatting                          |
-| `yarn lint`         | Lint code with ESLint                          |
-| `yarn lint:fix`     | Lint and auto-fix issues                       |
-| `yarn type-check`   | Run TypeScript type checking                   |
+| Command             | Description                                     |
+| ------------------- | ----------------------------------------------- |
+| `yarn dev`          | Run in development mode with hot reload         |
+| `yarn dev:pm2`      | Run development server with PM2                 |
+| `yarn build`        | Compile TypeScript (includes pre-build checks)  |
+| `yarn start`        | Run compiled code                               |
+| `yarn start:pm2`    | Run with PM2 process manager                    |
+| `yarn stop:pm2`     | Stop all PM2 processes                          |
+| `yarn restart:pm2`  | Restart all PM2 processes                       |
+| `yarn logs:pm2`     | View PM2 logs                                   |
+| `yarn monit:pm2`    | Monitor PM2 processes                           |
+| `yarn clean`        | Remove dist folder                              |
+| `yarn format`       | Format code with Prettier                       |
+| `yarn format:check` | Check code formatting                           |
+| `yarn lint`         | Lint code with ESLint                           |
+| `yarn lint:fix`     | Lint and auto-fix issues                        |
+| `yarn type-check`   | Run TypeScript type checking                    |
+| `yarn validate`     | Run all validations (lint + format + typecheck) |
+
+### Husky
+
+Git hooks are managed with Husky:
+
+- **prepare**: Automatically installed on `yarn install`
+- **pre-push**: Validates code quality before pushing (runs lint, format check, type check, and build)
 
 ## License
 
