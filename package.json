@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "dev:pm2": "pm2 start ecosystem.dev.config.js",
+    "dev:pm2": "pm2 start ecosystem.dev.config.cjs",
     "build": "tsc",
     "start": "node dist/index.js",
     "start:pm2": "pm2 start ecosystem.config.js",
