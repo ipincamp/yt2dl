@@ -30,7 +30,8 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "type-check": "tsc --noEmit",
     "prebuild": "yarn clean && yarn lint && yarn format:check && yarn type-check",
-    "prepare": "yarn build"
+    "prepare": "husky",
+    "validate": "yarn lint && yarn format:check && yarn type-check"
   },
   "dependencies": {
     "youtubei.js": "^16.0.1"
