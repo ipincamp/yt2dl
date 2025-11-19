@@ -10,7 +10,6 @@ import createHttpError from 'http-errors';
 import ytCore from '../core/yt_core.js';
 import getVideoInfo from '../core/get_video_info.js';
 import { decode_base64_url } from '../util/base_64.js';
-import { spawn } from 'child_process';
 import https from 'https';
 import http from 'http';
 
@@ -109,12 +108,43 @@ export default async function downloadHandler(
       throw createHttpError(404, 'Requested format not found');
     }
 
-    // Get the streaming URL (await because decipher returns a Promise)
-    const streamUrl = await selectedFormat.decipher(ytCore.session.player);
+    console.log('Selected format details:', {
+      itag: selectedFormat.itag,
+      has_audio: selectedFormat.has_audio,
+      has_video: selectedFormat.has_video,
+      url: selectedFormat.url,
+      cipher: selectedFormat.cipher,
+      signature_cipher: selectedFormat.signature_cipher,
+    });
 
-    // Determine if we need ffmpeg (for formats without both audio and video)
-    const needsFfmpeg = selectedFormat.has_audio && selectedFormat.has_video;
-    const hasDirectUrl = !!streamUrl;
+    // Get the streaming URL
+    let streamUrl: string;
+
+    try {
+      // Check if format has a direct URL or needs deciphering
+      if (selectedFormat.url) {
+        streamUrl = selectedFormat.url;
+        console.log('Using direct URL');
+      } else if (selectedFormat.cipher || selectedFormat.signature_cipher) {
+        // Decipher the URL
+        streamUrl = await selectedFormat.decipher(ytCore.session.player);
+        console.log('URL deciphered successfully');
+      } else {
+        throw new Error('No URL or cipher available for this format');
+      }
+    } catch (error) {
+      console.error('Error getting stream URL:', error);
+      throw createHttpError(
+        500,
+        `Failed to get stream URL: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+
+    if (!streamUrl) {
+      throw createHttpError(500, 'No valid stream URL obtained');
+    }
+
+    console.info('Stream URL obtained:', streamUrl.substring(0, 100) + '...');
 
     // Generate filename
     const sanitizedTitle = (basicInfo.title || 'video')
@@ -130,139 +160,64 @@ export default async function downloadHandler(
       selectedFormat.mime_type?.split(';')[0] || 'video/mp4'
     );
 
-    if (hasDirectUrl && !needsFfmpeg) {
-      // Stream directly from CDN
-      console.log(`Streaming directly from CDN for itag ${formatInfo.itag}`);
+    // Stream directly from YouTube CDN
+    // All formats (bundle, video-only, audio-only) can be streamed directly
+    console.log(
+      `Streaming directly from CDN for itag ${formatInfo.itag} (audio: ${selectedFormat.has_audio}, video: ${selectedFormat.has_video})`
+    );
 
-      const protocol = streamUrl.startsWith('https') ? https : http;
+    const protocol = streamUrl.startsWith('https') ? https : http;
 
-      protocol
-        .get(streamUrl, (streamResponse) => {
-          if (streamResponse.statusCode !== 200) {
-            throw createHttpError(500, 'Failed to fetch video stream');
-          }
-
-          // Set content length if available
-          if (streamResponse.headers['content-length']) {
-            res.setHeader(
-              'Content-Length',
-              streamResponse.headers['content-length']
-            );
-          }
-
-          // Pipe the stream to response
-          streamResponse.pipe(res);
-
-          // Handle errors
-          streamResponse.on('error', (error) => {
-            console.error('Stream error:', error);
-            if (!res.headersSent) {
-              res.status(500).json({
-                status: false,
-                message: 'Error streaming video',
-              });
-            }
-          });
-        })
-        .on('error', (error) => {
-          console.error('Request error:', error);
+    protocol
+      .get(streamUrl, (streamResponse) => {
+        if (streamResponse.statusCode !== 200) {
+          console.error(`Stream response status: ${streamResponse.statusCode}`);
           if (!res.headersSent) {
             res.status(500).json({
               status: false,
-              message: 'Error fetching video',
+              message: `Failed to fetch video stream: ${streamResponse.statusCode}`,
             });
           }
-        });
-    } else {
-      // Use ffmpeg for processing
-      console.log(`Using ffmpeg for itag ${formatInfo.itag}`);
-
-      // Check if format needs combining (has both audio and video)
-      if (selectedFormat.has_audio && selectedFormat.has_video) {
-        // Single stream with both audio and video
-        const ffmpeg = spawn(
-          'ffmpeg',
-          [
-            '-i',
-            streamUrl,
-            '-c',
-            'copy',
-            '-f',
-            formatInfo.mime === 'mp4' ? 'mp4' : 'matroska',
-            '-movflags',
-            'frag_keyframe+empty_moov',
-            'pipe:1',
-          ],
-          {
-            stdio: ['pipe', 'pipe', 'pipe'],
-          }
-        );
-
-        if (ffmpeg.stdout) {
-          ffmpeg.stdout.pipe(res);
+          return;
         }
 
-        if (ffmpeg.stderr) {
-          ffmpeg.stderr.on('data', (data: Buffer) => {
-            console.error(`ffmpeg stderr: ${data.toString()}`);
-          });
+        // Set content length if available
+        if (streamResponse.headers['content-length']) {
+          res.setHeader(
+            'Content-Length',
+            streamResponse.headers['content-length']
+          );
         }
 
-        ffmpeg.on('error', (error: Error) => {
-          console.error('ffmpeg error:', error);
+        console.log('Starting stream pipe to client...');
+
+        // Pipe the stream to response
+        streamResponse.pipe(res);
+
+        // Handle errors
+        streamResponse.on('error', (error) => {
+          console.error('Stream error:', error);
           if (!res.headersSent) {
             res.status(500).json({
               status: false,
-              message: 'Error processing video with ffmpeg',
+              message: 'Error streaming video',
             });
           }
         });
 
-        ffmpeg.on('close', (code: number | null) => {
-          if (code !== 0) {
-            console.error(`ffmpeg exited with code ${code}`);
-          }
+        streamResponse.on('end', () => {
+          console.log('Stream completed successfully');
         });
-      } else {
-        // For video-only or audio-only, stream directly
-        const protocol = streamUrl.startsWith('https') ? https : http;
-
-        protocol
-          .get(streamUrl, (streamResponse) => {
-            if (streamResponse.statusCode !== 200) {
-              throw createHttpError(500, 'Failed to fetch stream');
-            }
-
-            if (streamResponse.headers['content-length']) {
-              res.setHeader(
-                'Content-Length',
-                streamResponse.headers['content-length']
-              );
-            }
-
-            streamResponse.pipe(res);
-
-            streamResponse.on('error', (error) => {
-              console.error('Stream error:', error);
-              if (!res.headersSent) {
-                res.status(500).json({
-                  status: false,
-                  message: 'Error streaming media',
-                });
-              }
-            });
-          })
-          .on('error', (error) => {
-            console.error('Request error:', error);
-            if (!res.headersSent) {
-              res.status(500).json({
-                status: false,
-                message: 'Error fetching media',
-              });
-            }
+      })
+      .on('error', (error) => {
+        console.error('Request error:', error);
+        if (!res.headersSent) {
+          res.status(500).json({
+            status: false,
+            message: 'Error fetching video',
           });
-      }
-    }
+        }
+      });
   } catch (error) {
     next(error);
   }
