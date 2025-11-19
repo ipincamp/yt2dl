@@ -7,8 +7,14 @@
 
 import express, { Request, Response, NextFunction } from 'express';
 import createHttpError, { HttpError } from 'http-errors';
+import apiRouter from '../router/api.js';
 
 const app = express();
+
+/**
+ * Middleware for parsing JSON request bodies
+ */
+app.use(express.json());
 
 /**
  * Static file serving
@@ -16,6 +22,12 @@ const app = express();
  * Example: /public/logo.png will be accessible at /logo.png
  */
 app.use(express.static('public'));
+
+/**
+ * API routes
+ * All API endpoints are prefixed with /api
+ */
+app.use('/api', apiRouter);
 
 /**
  * Root route handler
