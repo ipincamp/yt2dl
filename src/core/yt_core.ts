@@ -33,7 +33,7 @@ export default await Innertube.create({
   cache: new UniversalCache(true),
   retrieve_player: true,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetch: async (input: any, init?: any) => {
+  fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const headers: Record<string, string> = {
       ...(init?.headers || {}),
       'User-Agent':
