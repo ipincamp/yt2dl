@@ -168,56 +168,90 @@ export default async function downloadHandler(
 
     const protocol = streamUrl.startsWith('https') ? https : http;
 
-    protocol
-      .get(streamUrl, (streamResponse) => {
-        if (streamResponse.statusCode !== 200) {
-          console.error(`Stream response status: ${streamResponse.statusCode}`);
-          if (!res.headersSent) {
-            res.status(500).json({
-              status: false,
-              message: `Failed to fetch video stream: ${streamResponse.statusCode}`,
-            });
-          }
-          return;
-        }
-
-        // Set content length if available
-        if (streamResponse.headers['content-length']) {
-          res.setHeader(
-            'Content-Length',
-            streamResponse.headers['content-length']
-          );
-        }
-
-        console.log('Starting stream pipe to client...');
-
-        // Pipe the stream to response
-        streamResponse.pipe(res);
-
-        // Handle errors
-        streamResponse.on('error', (error) => {
-          console.error('Stream error:', error);
-          if (!res.headersSent) {
-            res.status(500).json({
-              status: false,
-              message: 'Error streaming video',
-            });
-          }
-        });
-
-        streamResponse.on('end', () => {
-          console.log('Stream completed successfully');
-        });
-      })
-      .on('error', (error) => {
-        console.error('Request error:', error);
+    const makeRequest = (url: string, redirectCount = 0): void => {
+      if (redirectCount > 5) {
+        console.error('Too many redirects');
         if (!res.headersSent) {
           res.status(500).json({
             status: false,
-            message: 'Error fetching video',
+            message: 'Too many redirects',
           });
         }
-      });
+        return;
+      }
+
+      const currentProtocol = url.startsWith('https') ? https : http;
+
+      currentProtocol
+        .get(url, (streamResponse) => {
+          const statusCode = streamResponse.statusCode || 0;
+
+          // Handle redirects (301, 302, 303, 307, 308)
+          if (
+            statusCode >= 300 &&
+            statusCode < 400 &&
+            streamResponse.headers.location
+          ) {
+            console.log(
+              `Following redirect (${statusCode}) to: ${streamResponse.headers.location.substring(0, 100)}...`
+            );
+            streamResponse.resume(); // Consume response to free up memory
+            makeRequest(streamResponse.headers.location, redirectCount + 1);
+            return;
+          }
+
+          if (statusCode !== 200) {
+            console.error(`Stream response status: ${statusCode}`);
+            if (!res.headersSent) {
+              res.status(500).json({
+                status: false,
+                message: `Failed to fetch video stream: ${statusCode}`,
+              });
+            }
+            return;
+          }
+
+          // Set content length if available
+          if (streamResponse.headers['content-length']) {
+            res.setHeader(
+              'Content-Length',
+              streamResponse.headers['content-length']
+            );
+          }
+
+          console.log('Starting stream pipe to client...');
+
+          // Pipe the stream to response
+          streamResponse.pipe(res);
+
+          // Handle errors
+          streamResponse.on('error', (error) => {
+            console.error('Stream error:', error);
+            if (!res.headersSent) {
+              res.status(500).json({
+                status: false,
+                message: 'Error streaming video',
+              });
+            }
+          });
+
+          streamResponse.on('end', () => {
+            console.log('Stream completed successfully');
+          });
+        })
+        .on('error', (error) => {
+          console.error('Request error:', error);
+          if (!res.headersSent) {
+            res.status(500).json({
+              status: false,
+              message: 'Error fetching video',
+            });
+          }
+        });
+    };
+
+    // Start the request
+    makeRequest(streamUrl);
   } catch (error) {
     next(error);
   }
