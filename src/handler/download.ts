@@ -10,8 +10,6 @@ import createHttpError from 'http-errors';
 import ytCore from '../core/yt_core.js';
 import getVideoInfo from '../core/get_video_info.js';
 import { decode_base64_url } from '../util/base_64.js';
-import https from 'https';
-import http from 'http';
 
 /**
  * Extracts the video ID from a YouTube URL.
@@ -94,7 +92,7 @@ export default async function downloadHandler(
     const videoInfo = await getVideoInfo(ytCore, videoId);
     const basicInfo = videoInfo.basic_info;
 
-    // Find the requested format
+    // Find the requested format to get Metadata (Size, Mime, etc)
     const allFormats = [
       ...(videoInfo.streaming_data?.formats || []),
       ...(videoInfo.streaming_data?.adaptive_formats || []),
@@ -112,39 +110,9 @@ export default async function downloadHandler(
       itag: selectedFormat.itag,
       has_audio: selectedFormat.has_audio,
       has_video: selectedFormat.has_video,
-      url: selectedFormat.url,
-      cipher: selectedFormat.cipher,
-      signature_cipher: selectedFormat.signature_cipher,
+      content_length: selectedFormat.content_length,
+      mime_type: selectedFormat.mime_type,
     });
-
-    // Get the streaming URL
-    let streamUrl: string;
-
-    try {
-      // Check if format has a direct URL or needs deciphering
-      if (selectedFormat.url) {
-        streamUrl = selectedFormat.url;
-        console.log('Using direct URL');
-      } else if (selectedFormat.cipher || selectedFormat.signature_cipher) {
-        // Decipher the URL
-        streamUrl = await selectedFormat.decipher(ytCore.session.player);
-        console.log('URL deciphered successfully');
-      } else {
-        throw new Error('No URL or cipher available for this format');
-      }
-    } catch (error) {
-      console.error('Error getting stream URL:', error);
-      throw createHttpError(
-        500,
-        `Failed to get stream URL: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
-    }
-
-    if (!streamUrl) {
-      throw createHttpError(500, 'No valid stream URL obtained');
-    }
-
-    console.info('Stream URL obtained:', streamUrl.substring(0, 100) + '...');
 
     // Generate filename
     const sanitizedTitle = (basicInfo.title || 'video')
@@ -160,98 +128,67 @@ export default async function downloadHandler(
       selectedFormat.mime_type?.split(';')[0] || 'video/mp4'
     );
 
-    // Stream directly from YouTube CDN
-    // All formats (bundle, video-only, audio-only) can be streamed directly
+    // Set content length ONLY if we are downloading a direct stream (no mixing required)
+    // If the file is pre-mixed (like itag 18/22), content-length is valid.
+    // If youtubei.js needs to mix video+audio on the fly, content-length is unpredictable.
+    if (selectedFormat.content_length) {
+      res.setHeader('Content-Length', String(selectedFormat.content_length));
+    }
+
     console.log(
-      `Streaming directly from CDN for itag ${formatInfo.itag} (audio: ${selectedFormat.has_audio}, video: ${selectedFormat.has_video})`
+      `Downloading itag ${formatInfo.itag} (audio: ${selectedFormat.has_audio}, video: ${selectedFormat.has_video})`
     );
 
-    const protocol = streamUrl.startsWith('https') ? https : http;
+    try {
+      const stream = await videoInfo.download({
+        itag: selectedFormat.itag,
+      });
 
-    const makeRequest = (url: string, redirectCount = 0): void => {
-      if (redirectCount > 5) {
-        console.error('Too many redirects');
+      console.log('Download stream obtained, piping to client...');
+
+      // Convert ReadableStream to Node.js Readable and pipe to response
+      const { Readable } = await import('stream');
+      const nodeStream = Readable.fromWeb(stream);
+
+      nodeStream.pipe(res);
+
+      // Handle stream errors
+      nodeStream.on('error', (error: Error) => {
+        console.error('Download stream error:', error);
         if (!res.headersSent) {
-          res.status(500).json({
-            status: false,
-            message: 'Too many redirects',
-          });
+          // Jangan kirim JSON jika header sudah terkirim (file download sudah mulai)
+          try {
+            res.end();
+          } catch {
+            /* empty */
+          }
         }
-        return;
+      });
+
+      nodeStream.on('end', () => {
+        console.log('Download completed successfully');
+      });
+
+      // Clean up if client disconnects
+      res.on('close', () => {
+        console.log('Client connection closed');
+        nodeStream.destroy();
+      });
+    } catch (downloadError) {
+      console.error('Download initiation error:', downloadError);
+
+      let errorMessage = 'Failed to download video';
+      if (downloadError instanceof Error) {
+        errorMessage = downloadError.message;
+        // Provide clearer error if FFMPEG is missing and needed (rare for itag 18, common for 1080p)
+        if (errorMessage.toLowerCase().includes('ffmpeg')) {
+          errorMessage =
+            'Server error: FFMPEG is required on the server to process this format';
+        }
       }
 
-      const currentProtocol = url.startsWith('https') ? https : http;
-
-      currentProtocol
-        .get(url, (streamResponse) => {
-          const statusCode = streamResponse.statusCode || 0;
-
-          // Handle redirects (301, 302, 303, 307, 308)
-          if (
-            statusCode >= 300 &&
-            statusCode < 400 &&
-            streamResponse.headers.location
-          ) {
-            console.log(
-              `Following redirect (${statusCode}) to: ${streamResponse.headers.location.substring(0, 100)}...`
-            );
-            streamResponse.resume(); // Consume response to free up memory
-            makeRequest(streamResponse.headers.location, redirectCount + 1);
-            return;
-          }
-
-          if (statusCode !== 200) {
-            console.error(`Stream response status: ${statusCode}`);
-            if (!res.headersSent) {
-              res.status(500).json({
-                status: false,
-                message: `Failed to fetch video stream: ${statusCode}`,
-              });
-            }
-            return;
-          }
-
-          // Set content length if available
-          if (streamResponse.headers['content-length']) {
-            res.setHeader(
-              'Content-Length',
-              streamResponse.headers['content-length']
-            );
-          }
-
-          console.log('Starting stream pipe to client...');
-
-          // Pipe the stream to response
-          streamResponse.pipe(res);
-
-          // Handle errors
-          streamResponse.on('error', (error) => {
-            console.error('Stream error:', error);
-            if (!res.headersSent) {
-              res.status(500).json({
-                status: false,
-                message: 'Error streaming video',
-              });
-            }
-          });
-
-          streamResponse.on('end', () => {
-            console.log('Stream completed successfully');
-          });
-        })
-        .on('error', (error) => {
-          console.error('Request error:', error);
-          if (!res.headersSent) {
-            res.status(500).json({
-              status: false,
-              message: 'Error fetching video',
-            });
-          }
-        });
-    };
-
-    // Start the request
-    makeRequest(streamUrl);
+      throw createHttpError(500, errorMessage);
+    }
   } catch (error) {
     next(error);
   }

@@ -5,12 +5,8 @@
  * @license GPL-3.0 (General Public License v3.0)
  */
 
-import { Innertube, UniversalCache, Platform, type Types } from 'youtubei.js';
+import { Innertube, Platform, Types, UniversalCache } from 'youtubei.js/web';
 
-/**
- * Configure Platform.shim.eval to handle URL deciphering
- * This is required for deciphering streaming URLs in Node.js environment
- */
 Platform.shim.eval = async (
   data: Types.BuildScriptResult,
   env: Record<string, Types.VMPrimative>
@@ -32,24 +28,23 @@ Platform.shim.eval = async (
 
 /**
  * Initializes and exports an instance of the Innertube API client.
- *
- * @remarks
- * This instance is configured with a universal cache, a custom user agent string,
- * a specific timezone ("Asia/Jakarta"), and Platform.shim.eval for URL deciphering.
- *
- * @example
- * ```typescript
- * import ytCore from './core/yt_core';
- * // Use ytCore to interact with YouTube's internal API.
- * ```
- *
- * @see {@link Innertube.create}
- *
- * @returns {Promise<Innertube>} A promise that resolves to an initialized Innertube client.
  */
 export default await Innertube.create({
   cache: new UniversalCache(true),
-  user_agent:
-    'Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0',
-  timezone: 'Asia/Jakarta',
+  retrieve_player: true,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetch: async (input: any, init?: any) => {
+    const headers: Record<string, string> = {
+      ...(init?.headers || {}),
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+      Accept: '*/*',
+    };
+
+    return globalThis.fetch(input, {
+      ...init,
+      headers,
+    });
+  },
 });
