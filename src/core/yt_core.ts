@@ -6,13 +6,15 @@
  */
 
 import { Innertube, UniversalCache } from 'youtubei.js';
+import { VM } from 'vm2';
 
 /**
  * Initializes and exports an instance of the Innertube API client.
  *
  * @remarks
  * This instance is configured with a universal cache, a custom user agent string,
- * and a specific timezone ("Asia/Jakarta").
+ * a specific timezone ("Asia/Jakarta"), and a JavaScript evaluator using vm2.
+ * The evaluator is required to decipher streaming URLs.
  *
  * @example
  * ```typescript
@@ -29,4 +31,11 @@ export default await Innertube.create({
   user_agent:
     'Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0',
   timezone: 'Asia/Jakarta',
+  evaluate_js: (code: string) => {
+    const vm = new VM({
+      timeout: 5000,
+      sandbox: {},
+    });
+    return vm.run(code);
+  },
 });
