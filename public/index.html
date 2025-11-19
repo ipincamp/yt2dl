@@ -477,7 +477,13 @@
                     throw new Error('Failed to fetch video information');
                 }
 
-                videoData = await response.json();
+                const result = await response.json();
+
+                if (!result.status || !result.data) {
+                    throw new Error(result.message || 'Invalid response from server');
+                }
+
+                videoData = result.data;
                 displayVideoInfo(videoData);
                 hideWaiting();
 
