@@ -547,6 +547,8 @@
 
         // Select format
         function selectFormat(containerId, index, format) {
+            console.log('Format selected:', format);
+
             // Remove previous selection
             document.querySelectorAll(`#${containerId} .format-item`).forEach(item => {
                 item.classList.remove('selected');
@@ -556,45 +558,101 @@
             document.querySelectorAll(`#${containerId} .format-item`)[index].classList.add('selected');
             selectedFormat = format;
 
-            // Start download process
-            startDownload(format);
+            // Show download ready immediately
+            showDownloadReady();
         }
 
-        // Start download
-        async function startDownload(format) {
-            showWaiting('Preparing your download...', 'Processing video format');
+        // Download file
+        async function downloadFile() {
+            console.log('Download button clicked');
+            console.log('Selected format:', selectedFormat);
+            console.log('YouTube URL:', document.getElementById('youtubeUrl').value);
+
+            if (!selectedFormat) {
+                showError('Please select a format first');
+                return;
+            }
+
+            if (!selectedFormat.token) {
+                showError('Invalid format token');
+                console.error('Format missing token:', selectedFormat);
+                return;
+            }
 
             try {
+                // Show loading state
+                showWaiting('Preparing download...', 'Please wait');
+
+                const url = document.getElementById('youtubeUrl').value;
+                const token = selectedFormat.token;
+
+                console.log('Making download request with:', { url, token });
+
+                // Make the download request
                 const response = await fetch('/api/download', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        url: document.getElementById('youtubeUrl').value,
-                        format: format
-                    })
+                    body: JSON.stringify({ url, token })
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
                 if (!response.ok) {
-                    throw new Error('Download preparation failed');
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    throw new Error(errorData.message || `Server error: ${response.status}`);
                 }
 
-                const data = await response.json();
-                downloadUrl = data.downloadUrl;
+                // Get the blob from response
+                const blob = await response.blob();
+                console.log('Blob received, size:', blob.size);
 
-                showDownloadReady();
-            } catch (error) {
+                // Create download link
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = downloadUrl;
+
+                // Get filename from Content-Disposition header
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'download';
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+                    if (filenameMatch) {
+                        filename = filenameMatch[1];
+                    }
+                }
+                a.download = filename;
+
+                console.log('Starting download:', filename);
+
+                // Trigger download
+                document.body.appendChild(a);
+                a.click();
+
+                // Cleanup
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(downloadUrl);
+                    document.body.removeChild(a);
+                }, 100);
+
+                // Show success
                 hideWaiting();
-                showError('Failed to prepare download. Please try again.');
-                console.error('Error:', error);
-            }
-        }
+                showWaiting('Download started!', 'Check your downloads folder');
+                setTimeout(() => {
+                    hideWaiting();
+                }, 3000);
 
-        // Download file
-        function downloadFile() {
-            if (downloadUrl) {
-                window.location.href = downloadUrl;
+            } catch (error) {
+                console.error('Download error:', error);
+                console.error('Error stack:', error.stack);
+                hideWaiting();
+                showError(`Download failed: ${error.message}`);
+                
+                // Show download button again so user can retry
+                showDownloadReady();
             }
         }
 
@@ -622,24 +680,50 @@
 
         // Show waiting area
         function showWaiting(text, status) {
-            document.getElementById('waitingText').textContent = text;
-            document.getElementById('waitingStatus').textContent = status;
-            document.getElementById('spinner').style.display = 'block';
-            document.getElementById('downloadReady').classList.remove('show');
-            document.getElementById('waitingArea').classList.add('show');
+            console.log('showWaiting called:', text, status);
+            const waitingText = document.getElementById('waitingText');
+            const waitingStatus = document.getElementById('waitingStatus');
+            const spinner = document.getElementById('spinner');
+            const downloadReady = document.getElementById('downloadReady');
+            const waitingArea = document.getElementById('waitingArea');
+            
+            // Reset all visibility
+            waitingText.style.display = 'block';
+            waitingStatus.style.display = 'block';
+            spinner.style.display = 'block';
+            downloadReady.classList.remove('show');
+            
+            // Set text content
+            waitingText.textContent = text;
+            waitingStatus.textContent = status;
+            
+            // Show waiting area
+            waitingArea.classList.add('show');
         }
 
         // Hide waiting area
         function hideWaiting() {
+            console.log('hideWaiting called');
             document.getElementById('waitingArea').classList.remove('show');
         }
 
         // Show download ready
         function showDownloadReady() {
-            document.getElementById('spinner').style.display = 'none';
-            document.getElementById('waitingText').style.display = 'none';
-            document.getElementById('waitingStatus').style.display = 'none';
-            document.getElementById('downloadReady').classList.add('show');
+            console.log('showDownloadReady called');
+            const spinner = document.getElementById('spinner');
+            const waitingText = document.getElementById('waitingText');
+            const waitingStatus = document.getElementById('waitingStatus');
+            const downloadReady = document.getElementById('downloadReady');
+            const waitingArea = document.getElementById('waitingArea');
+            
+            // Hide loading elements
+            spinner.style.display = 'none';
+            waitingText.style.display = 'none';
+            waitingStatus.style.display = 'none';
+            
+            // Show download button
+            downloadReady.classList.add('show');
+            waitingArea.classList.add('show');
         }
 
         // Show error

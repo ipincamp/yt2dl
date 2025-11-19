@@ -7,6 +7,7 @@
 
 import { Router } from 'express';
 import videoInfoHandler from '../handler/video_info.js';
+import downloadHandler from '../handler/download.js';
 
 const router = Router();
 
@@ -16,5 +17,12 @@ const router = Router();
  * Query params: url (YouTube video URL)
  */
 router.get('/video-info', videoInfoHandler);
+
+/**
+ * POST /api/download
+ * Downloads the selected video/audio format
+ * Body: { url: string, token: string }
+ */
+router.post('/download', downloadHandler);
 
 export default router;
