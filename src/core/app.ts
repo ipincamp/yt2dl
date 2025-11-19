@@ -11,6 +11,13 @@ import createHttpError, { HttpError } from 'http-errors';
 const app = express();
 
 /**
+ * Static file serving
+ * Serves static files from the 'public' directory.
+ * Example: /public/logo.png will be accessible at /logo.png
+ */
+app.use(express.static('public'));
+
+/**
  * Root route handler
  * Responds with the user's User-Agent header.
  */
