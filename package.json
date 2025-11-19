@@ -1,36 +1,55 @@
 {
   "name": "yt2dl",
-  "version": "1.0.9",
-  "description": "YouTube Audio & Video Downloader using NodeJS",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "YouTube Downloader using NodeJS",
+  "main": "dist/index.js",
+  "type": "module",
   "repository": "https://github.com/ipincamp/yt2dl.git",
   "author": "ipincamp <support@nur-arifin.my.id>",
   "license": "GPL-3.0",
   "private": true,
-  "scripts": {
-    "dev": "nodemon src/",
-    "start": "node src/",
-    "lint": "eslint --fix src/"
-  },
   "engines": {
-    "node": ">=18.x",
+    "node": ">=22.x",
     "npm": ">=10.x",
     "yarn": ">=1.22.x"
   },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:pm2": "pm2 start ecosystem.dev.config.cjs",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:pm2": "pm2 start ecosystem.config.js",
+    "stop:pm2": "pm2 stop all",
+    "restart:pm2": "pm2 restart all",
+    "logs:pm2": "pm2 logs",
+    "monit:pm2": "pm2 monit",
+    "clean": "rm -rf dist",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "prebuild": "yarn clean && yarn lint && yarn format:check && yarn type-check",
+    "prepare": "husky",
+    "validate": "yarn lint && yarn format:check && yarn type-check"
+  },
   "dependencies": {
-    "axios": "^1.12.0",
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.3",
-    "express": "^4.19.2",
-    "joi": "^17.12.1",
-    "sanitize-filename": "^1.6.3",
-    "ytdl-core": "^4.11.5"
+    "express": "^5.1.0",
+    "http-errors": "^2.0.0",
+    "youtubei.js": "^16.0.1"
   },
   "devDependencies": {
-    "eslint": "^7.32.0 || ^8.2.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "nodemon": "^3.0.3"
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "pm2": "^6.0.13",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,0 +1,5 @@
+# Run code quality checks before push
+yarn lint
+yarn format:check
+yarn type-check
+yarn build
