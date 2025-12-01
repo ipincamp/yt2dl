@@ -34,7 +34,7 @@
     "validate": "yarn lint && yarn format:check && yarn type-check"
   },
   "dependencies": {
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "http-errors": "^2.0.0",
     "youtubei.js": "^16.0.1"
   },
